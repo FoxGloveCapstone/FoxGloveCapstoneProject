@@ -23,7 +23,6 @@ import javax.swing.SwingConstants;
 public class LifeGUI extends JFrame {
 	
 	LifeGUI(){
-	
 		super("Game of Life");
 
 		//Sets the panels being used
