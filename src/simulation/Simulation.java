@@ -58,6 +58,12 @@ public class Simulation extends JFrame {
 		JButton nextButton = new JButton("Next");
 		JButton clearButton = new JButton("Clear");
 		
+		mapGenerateButton.addActionListener(new Mapgenerate());
+		playButton.addActionListener(new Play());
+		pauseButton.addActionListener(new Pause());
+		nextButton.addActionListener(new Step());
+		clearButton.addActionListener(new Reset());
+		
 		//Labels for the rules section
 		JLabel rowsLabel = new JLabel ("Rows");
 		JLabel columnsLabel = new JLabel("Columns");
@@ -92,26 +98,9 @@ public class Simulation extends JFrame {
 		add(gridBoard, BorderLayout.WEST);
 		add(ruleBoard, BorderLayout.CENTER);
 		
-        for (int i = 0; i < 100; i++) {
-        	//String arguments passed here will label the buttons, we probably don't want the buttons labeled
-            JButton button = new JButton();
-            
-            //Sets the buttons size, its important to do this so that the buttons are square shaped
-            button.setPreferredSize(new Dimension(30,30));
-            
-            //Unneeded code that makes the cells alternate between black and white, mostly done to demonstrate color manipulation
-           // if(i % 2 <= 0)
-            	button.setBackground(Color.WHITE);
-           // else    
-            	//button.setBackground(Color.BLACK);
-            
-            //adds the color manipulation to each cell so when you click it it changes color
-            button.addActionListener(new Colorswitch(button));
-            gridBoard.add(button);
-        }
 		
-		
-		
+		Grid grid = new Grid();
+		grid.generate(gridBoard, 50, 50);
 		
 		
 		//Close and Size functions for JFrame
@@ -120,24 +109,7 @@ public class Simulation extends JFrame {
 	}
 	
 	
-	public static class Colorswitch implements ActionListener
-	{
-		public JButton button;
-		
-		public Colorswitch(JButton butt) 
-		{
-			this.button = butt;
-		}
-
-		public void actionPerformed(ActionEvent e) 
-		{
-			//switches the color when you click it
-            if (button.getBackground() == Color.BLACK) 
-                button.setBackground(Color.WHITE);
-            else 
-                button.setBackground(Color.BLACK);
-        }
-	}
+	
 
 	/* Simulation Controls */
 	
@@ -156,4 +128,45 @@ public class Simulation extends JFrame {
 	public void clear() {
 		
 	}
+	
+	public static class Mapgenerate implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			System.out.println("Mapgenerate");
+        }
+	}
+	
+	public static class Play implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			System.out.println("Play");
+        }
+	}
+	
+	public static class Pause implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			System.out.println("Pause");
+        }
+	}
+	
+	public static class Step implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			System.out.println("Step");
+        }
+	}
+	
+	public static class Reset implements ActionListener
+	{
+		public void actionPerformed(ActionEvent e) 
+		{
+			System.out.println("Reset");
+        }
+	}
+	
 }
