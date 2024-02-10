@@ -11,6 +11,7 @@ import java.awt.event.ActionListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -48,8 +49,8 @@ public class Simulation extends JFrame {
 		gridBoard.setPreferredSize(new Dimension(800,900));
 		
 		//Buttons and Textfields for operations
-		JTextField rowsField = new JTextField();
-		JTextField columnsField = new JTextField();
+		JTextField rowsField = new JTextField("10");
+		JTextField columnsField = new JTextField("10");
 		rowsField.setColumns(10);
 		columnsField.setColumns(10);
 		JButton mapGenerateButton = new JButton("Generate Map");
@@ -58,11 +59,40 @@ public class Simulation extends JFrame {
 		JButton nextButton = new JButton("Next");
 		JButton clearButton = new JButton("Clear");
 		
-		mapGenerateButton.addActionListener(new Mapgenerate());
+		
+		mapGenerateButton.addActionListener(new ActionListener(){
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				
+					String generateRows = rowsField.getText();
+					String generateColumns = columnsField.getText();
+					try {
+						int generateR = Integer.parseInt(generateRows);
+						int generateC = Integer.parseInt(generateColumns);
+						setVisible(false);
+						Grid grid = new Grid();
+						gridBoard.removeAll();
+						grid.generate(gridBoard, generateR, generateC);
+						setVisible(true);
+					}
+					catch(NumberFormatException s){
+				           JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a Number!", 
+                                   "ERROR", JOptionPane.ERROR_MESSAGE);
+					}
+			}
+		});
+		
 		playButton.addActionListener(new Play());
 		pauseButton.addActionListener(new Pause());
 		nextButton.addActionListener(new Step());
-		clearButton.addActionListener(new Reset());
+		
+		clearButton.addActionListener(new Reset() {
+			public void actionPerformed(ActionEvent c) {
+				setVisible(false);
+				gridBoard.removeAll();
+				setVisible(true);
+			}
+		});
 		
 		//Labels for the rules section
 		JLabel rowsLabel = new JLabel ("Rows");
@@ -73,6 +103,7 @@ public class Simulation extends JFrame {
 		JLabel rules4 = new JLabel("--Any dead cell with exactly three live neighbours comes to life.");
 		JLabel rules5 = new JLabel("Rules for the Game Of Life");
 		JLabel rules6 = new JLabel("*************************************************************************************************");
+		JLabel fCounter = new JLabel("Frame Counter: ");
 
 		//Adds rules to ruleboard
 		rules.add(rules5);
@@ -93,16 +124,13 @@ public class Simulation extends JFrame {
 		buttonBoard.add(pauseButton);
 		buttonBoard.add(nextButton);
 		buttonBoard.add(clearButton);
+		buttonBoard.add(fCounter);
 		
 		//Adds borderlayout and boards to the JFrame
 		add(gridBoard, BorderLayout.WEST);
 		add(ruleBoard, BorderLayout.CENTER);
 		
-		
-		Grid grid = new Grid();
-		grid.generate(gridBoard, 50, 50);
-		
-		
+	
 		//Close and Size functions for JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(1400, 800));
@@ -122,24 +150,23 @@ public class Simulation extends JFrame {
 	public void reset() {
 		
 	}
-	public void clear() {
-		
-	}
+
 	
-	public static class Mapgenerate implements ActionListener
+	/*public static class Mapgenerate implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) 
 		{
+			
 			System.out.println("Mapgenerate");
-        }
-	}
+        	}
+	}*/
 	
 	public static class Play implements ActionListener
 	{
 		public void actionPerformed(ActionEvent e) 
 		{
 			System.out.println("Play");
-        }
+        	}
 	}
 	
 	public static class Pause implements ActionListener
@@ -147,7 +174,7 @@ public class Simulation extends JFrame {
 		public void actionPerformed(ActionEvent e) 
 		{
 			System.out.println("Pause");
-        }
+        	}
 	}
 	
 	public static class Step implements ActionListener
@@ -155,7 +182,7 @@ public class Simulation extends JFrame {
 		public void actionPerformed(ActionEvent e) 
 		{
 			System.out.println("Step");
-        }
+        	}
 	}
 	
 	public static class Reset implements ActionListener
@@ -163,7 +190,7 @@ public class Simulation extends JFrame {
 		public void actionPerformed(ActionEvent e) 
 		{
 			System.out.println("Reset");
-        }
+        	}
 	}
 	
 }
