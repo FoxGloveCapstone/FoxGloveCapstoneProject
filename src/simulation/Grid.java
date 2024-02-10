@@ -1,5 +1,6 @@
 package simulation;
 
+import data.ColorState;
 import data.Neighbors;
 
 import java.awt.BorderLayout;
@@ -25,25 +26,25 @@ import javax.swing.SwingConstants;
  */
 public class Grid {
 	private Cell[][] cells;
-	
+
 	public void generate(JPanel gridPanel, int width, int height) {
 		cells = new Cell[width][height];
 		gridPanel.setLayout(new GridLayout(width, height));
 
         for (int x = 0; x < width; x++) {
 			for(int y = 0; y < height; y++) {
-				//String arguments passed here will label the buttons, 
-				//we probably don't want the buttons labeled
+				// String arguments passed here will label the buttons, 
+				// we probably don't want the buttons labeled.
 				JButton button = new JButton();
-				//Sets the buttons size, its important to do this so that the buttons are square shaped
-				button.setPreferredSize(new Dimension(30,30));
-				// Set the cell's state to dead
-				button.setBackground(Color.WHITE);
-				//adds the color manipulation to each cell so when you click it it changes color
-				button.addActionListener(new Colorswitch(button));
+				Cell cell = new Cell(button);
+				
+				// Sets the buttons size, its important to do this so that the buttons are square shaped
+				button.setPreferredSize(new Dimension(30, 30));
+				
+				// Adds the color manipulation to each cell so when you click it it changes color
+				button.addActionListener(new ColorSwitch(button, cell));
 				gridPanel.add(button);
-			}
-			
+			}	
 		}
 	}
 	
@@ -60,22 +61,25 @@ public class Grid {
 		return cells[x][y];
 	}
 	
-	public static class Colorswitch implements ActionListener
-	{
+	public static class ColorSwitch implements ActionListener {
+		// This variable might not be necessary anymore, but I'll keep it here for now, just in case.
 		public JButton button;
+		public Cell cell;
 		
-		public Colorswitch(JButton butt) 
-		{
+		public ColorSwitch(JButton butt, Cell cell) {
 			this.button = butt;
+			this.cell = cell;
 		}
 
-		public void actionPerformed(ActionEvent e) 
-		{
-			//switches the color when you click it
-            if (button.getBackground() == Color.BLACK) 
-                button.setBackground(Color.WHITE);
+		public void actionPerformed(ActionEvent e) {
+			// If ruleset extension is implemented and more colors are added, 
+			// we'd probably have a palette of colors to select from. (You'd click red, everything you select turns red).
+			// In this scenario, the Grid class would be responsible for knowing which color to set the Cell to
+			// and this code will get completely replaced.
+            if (cell.getColorState() == ColorState.BLACK) 
+                cell.setColorState(ColorState.WHITE);
             else 
-                button.setBackground(Color.BLACK);
+                cell.setColorState(ColorState.BLACK);
         }
 	}
 }

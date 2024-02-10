@@ -1,6 +1,7 @@
 package simulation;
 import rules.*;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -11,7 +12,7 @@ import data.*;
  * Controls the state of a specific cell.
  */
 public class Cell {
-	private static ArrayList<Rule> ruleset;
+	private static ArrayList<Rule> ruleset;	
 	private ColorState currentState, nextState, initialState;
 	private JButton guiElement;
 
@@ -31,6 +32,12 @@ public class Cell {
 		ruleset.remove(index);
 	}
 	
+	public Cell(JButton guiElement) {
+		this.guiElement = guiElement;
+		setColorState(ColorState.WHITE);
+	}
+	
+
 	public void calculateNextStep(Neighbors neighbors) {
 		
 	}
@@ -38,4 +45,19 @@ public class Cell {
 	public void updateGUI() {
 		
 	}
+	
+	/* Getter and Setter */
+	public void setColorState(ColorState state) {
+		initialState = state;
+		currentState = state;
+		
+		// Set button color
+		Color color = ColorState.colorStateToRGB(state);
+		guiElement.setBackground(color);
+	}
+	
+	public ColorState getColorState() {
+		return currentState;
+	}
+	
 }

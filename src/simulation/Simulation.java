@@ -108,9 +108,6 @@ public class Simulation extends JFrame {
 		setSize(new Dimension(1400, 800));
 	}
 	
-	
-	
-
 	/* Simulation Controls */
 	
 	public void start() {
