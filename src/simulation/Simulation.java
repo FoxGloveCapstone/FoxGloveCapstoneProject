@@ -17,6 +17,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 /*
  * Controls the flow and execution of the simulation. This will most likely be the central class. 
@@ -25,6 +26,15 @@ import javax.swing.SwingConstants;
 public class Simulation extends JFrame {
 	private CellManager[] threads;
 	private int currentStep;
+	private int tickSpeed = 10;
+	private Timer timer;
+	
+	//Some aspect of the UI have to be declared here to be accessible 
+	private JLabel fCounter = new JLabel("Frame Counter: ");
+	private JLabel speedDisplay = new JLabel("Ticks Per Second: 1");
+	private JPanel gridBoard = new JPanel(new GridLayout(10, 10));
+	private JTextField rowsField = new JTextField("10");
+	private JTextField columnsField = new JTextField("10");
 
 	public static void main(String[] args) {
         Simulation window = new Simulation();
@@ -36,8 +46,7 @@ public class Simulation extends JFrame {
 		super("Game of Life");
 
 		//Sets the panels being used
-		JPanel buttonBoard = new JPanel(new FlowLayout());
-		JPanel gridBoard = new JPanel(new GridLayout(10, 10));		
+		JPanel buttonBoard = new JPanel(new FlowLayout());		
 		JPanel rules = new JPanel();		
 		JSplitPane ruleBoard = new JSplitPane(SwingConstants.HORIZONTAL, rules, buttonBoard);
 		//GridLayout gridLayout = new GridLayout();
@@ -49,8 +58,6 @@ public class Simulation extends JFrame {
 		gridBoard.setPreferredSize(new Dimension(800,900));
 		
 		//Buttons and Textfields for operations
-		JTextField rowsField = new JTextField("10");
-		JTextField columnsField = new JTextField("10");
 		rowsField.setColumns(10);
 		columnsField.setColumns(10);
 		JButton mapGenerateButton = new JButton("Generate Map");
@@ -58,41 +65,19 @@ public class Simulation extends JFrame {
 		JButton pauseButton = new JButton("Pause");
 		JButton nextButton = new JButton("Next");
 		JButton clearButton = new JButton("Clear");
+		JButton slowButton = new JButton("<-");
 		
+		JButton speedButton = new JButton("->");
 		
-		mapGenerateButton.addActionListener(new ActionListener(){
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				
-					String generateRows = rowsField.getText();
-					String generateColumns = columnsField.getText();
-					try {
-						int generateR = Integer.parseInt(generateRows);
-						int generateC = Integer.parseInt(generateColumns);
-						setVisible(false);
-						Grid grid = new Grid();
-						gridBoard.removeAll();
-						grid.generate(gridBoard, generateR, generateC);
-						setVisible(true);
-					}
-					catch(NumberFormatException s){
-				           JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a Number!", 
-                                   "ERROR", JOptionPane.ERROR_MESSAGE);
-					}
-			}
-		});
+		mapGenerateButton.addActionListener(new Mapgenerate(this));
 		
-		playButton.addActionListener(new Play());
-		pauseButton.addActionListener(new Pause());
-		nextButton.addActionListener(new Step());
-		
-		clearButton.addActionListener(new Reset() {
-			public void actionPerformed(ActionEvent c) {
-				setVisible(false);
-				gridBoard.removeAll();
-				setVisible(true);
-			}
-		});
+		playButton.addActionListener(new Play(this));
+		pauseButton.addActionListener(new Pause(this));
+		nextButton.addActionListener(new Step(this));
+		slowButton.addActionListener(new Lowerspeed(this));
+		speedButton.addActionListener(new Increasespeed(this));
+		clearButton.addActionListener(new Reset(this)); 
+
 		
 		//Labels for the rules section
 		JLabel rowsLabel = new JLabel ("Rows");
@@ -103,7 +88,6 @@ public class Simulation extends JFrame {
 		JLabel rules4 = new JLabel("--Any dead cell with exactly three live neighbours comes to life.");
 		JLabel rules5 = new JLabel("Rules for the Game Of Life");
 		JLabel rules6 = new JLabel("*************************************************************************************************");
-		JLabel fCounter = new JLabel("Frame Counter: ");
 
 		//Adds rules to ruleboard
 		rules.add(rules5);
@@ -124,6 +108,9 @@ public class Simulation extends JFrame {
 		buttonBoard.add(pauseButton);
 		buttonBoard.add(nextButton);
 		buttonBoard.add(clearButton);
+		buttonBoard.add(slowButton);
+		buttonBoard.add(speedDisplay);
+		buttonBoard.add(speedButton);
 		buttonBoard.add(fCounter);
 		
 		//Adds borderlayout and boards to the JFrame
@@ -134,63 +121,252 @@ public class Simulation extends JFrame {
 		//Close and Size functions for JFrame
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(1400, 800));
+		
+		//Timer is implemented for the ticker functionality, default delay of 1 second
+		timer = new Timer(1000, new ActionListener() 
+		{
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+            	step();
+            }
+        });
 	}
 	
 	/* Simulation Controls */
+	//all control methods are called within action listeners, the step method is also called from the timer.
 	
-	public void start() {
-		
-	}
-	public void pause() {
-		
-	}
-	public void step() {
-		
-	}
-	public void reset() {
-		
-	}
-
-	
-	/*public static class Mapgenerate implements ActionListener
+	//starts the timer and modifies the speed display
+	public void start() 
 	{
+		timer.start();
+		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+	}
+	
+	//stops the timer
+	public void pause()
+	{
+		timer.stop();
+	}
+	
+	//increments the tick by 1
+	public void step() 
+	{
+		currentStep++;
+		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
+	}
+	
+	//resets the map and ticker
+	public void reset() 
+	{
+		setVisible(false);
+		gridBoard.removeAll();
+		currentStep = 0;
+		timer.stop();
+		timer.setDelay(1000);
+		System.out.println("Reset");
+		setVisible(true);
+		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
+		tickSpeed = 10;
+		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+	}
+	
+	//increases ticker speed
+	public void increaseSpeed() 
+	{
+		tickSpeed--;
+		
+		//prevents speeds above 10 ticks per second
+		if(tickSpeed < 1)
+		{
+			tickSpeed = 1;
+		}
+		
+		//sets delay value
+		if(tickSpeed <= 10)
+		{
+			timer.setDelay(tickSpeed * 100);
+			System.out.println(timer.getDelay());
+		}
+		else
+		{
+			timer.setDelay((tickSpeed - 9) * 1000);
+			System.out.println(timer.getDelay());
+		}
+		
+		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+	}
+	
+	//decreases ticker speed
+	public void decreaseSpeed() 
+	{
+		tickSpeed++;
+		
+		//prevents negative speed
+		if(tickSpeed > 19)
+		{
+			tickSpeed = 19;
+		}
+		
+		//sets delay value
+		if(tickSpeed <= 10)
+		{
+			timer.setDelay(tickSpeed * 100);
+			System.out.println(timer.getDelay());
+		}
+		else
+		{
+			timer.setDelay((tickSpeed - 9) * 1000);
+			System.out.println(timer.getDelay());
+		}
+		
+		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+	}
+	
+	//generates map based on user input
+	public void mapGenerate()
+	{
+		String generateRows = rowsField.getText();
+		String generateColumns = columnsField.getText();
+		try 
+		{
+			int generateR = Integer.parseInt(generateRows);
+			int generateC = Integer.parseInt(generateColumns);
+			setVisible(false);
+			Grid grid = new Grid();
+			gridBoard.removeAll();
+			grid.generate(gridBoard, generateR, generateC);
+			setVisible(true);
+			currentStep = 0;
+			timer.stop();
+			timer.setDelay(1000);
+			fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
+			tickSpeed = 10;
+			speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+		}
+		catch(NumberFormatException s)
+		{
+	           JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a Number!", 
+                       "ERROR", JOptionPane.ERROR_MESSAGE);
+		}
+	}
+	
+	
+	
+	// Action listeners
+	
+	public static class Mapgenerate implements ActionListener
+	{
+		private Simulation simulator;
+		
+		Mapgenerate(Simulation sim)
+		{
+			simulator = sim;
+		}
+		
 		public void actionPerformed(ActionEvent e) 
 		{
+			simulator.mapGenerate();
 			
 			System.out.println("Mapgenerate");
-        	}
-	}*/
+        }
+	}
 	
 	public static class Play implements ActionListener
 	{
+		private Simulation simulator;
+		
+		Play(Simulation sim)
+		{
+			simulator = sim;
+		}
+		
 		public void actionPerformed(ActionEvent e) 
 		{
 			System.out.println("Play");
-        	}
+			simulator.start();
+        }
 	}
 	
 	public static class Pause implements ActionListener
 	{
+		private Simulation simulator;
+		
+		Pause(Simulation sim)
+		{
+			simulator = sim;
+		}
 		public void actionPerformed(ActionEvent e) 
 		{
 			System.out.println("Pause");
-        	}
+			simulator.pause();
+        }
 	}
 	
 	public static class Step implements ActionListener
 	{
+		private Simulation simulator;
+		
+		Step(Simulation sim)
+		{
+			simulator = sim;
+		}
 		public void actionPerformed(ActionEvent e) 
 		{
 			System.out.println("Step");
-        	}
+			simulator.step();
+        }
 	}
 	
 	public static class Reset implements ActionListener
 	{
+		private Simulation simulator;
+		
+		Reset(Simulation sim)
+		{
+			simulator = sim;
+		}
+		
+		public void actionPerformed(ActionEvent e) 
+		{	
+			simulator.reset();
+			
+			System.out.println("Reset");
+        }
+	}
+	
+	public static class Lowerspeed implements ActionListener
+	{
+		private Simulation simulator;
+		
+		Lowerspeed(Simulation sim)
+		{
+			simulator = sim;
+		}
+		
 		public void actionPerformed(ActionEvent e) 
 		{
-			System.out.println("Reset");
-        	}
+			simulator.decreaseSpeed();
+			
+			System.out.println("lower speed");
+        }
+	}
+	
+	public static class Increasespeed implements ActionListener
+	{
+		private Simulation simulator;
+		
+		Increasespeed(Simulation sim)
+		{
+			simulator = sim;
+		}
+		
+		public void actionPerformed(ActionEvent e) 
+		{
+			simulator.increaseSpeed();
+			
+			System.out.println("Increase speed");
+        }
 	}
 	
 }
