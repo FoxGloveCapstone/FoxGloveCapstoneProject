@@ -17,9 +17,6 @@ package simulation;
  * It controls the timing and the main GUI. 
  */
 
-
-
-
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -39,10 +36,6 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
-/*
- * Controls the flow and execution of the simulation. This will most likely be the central class. 
- * Controls the timing and the main GUI. 
- */
 public class Simulation extends JFrame {
 	private CellManager[] threads;
 	private int currentStep;
@@ -89,7 +82,7 @@ public class Simulation extends JFrame {
 		
 		JButton speedButton = new JButton("->");
 		
-		mapGenerateButton.addActionListener(new Mapgenerate(this));
+		mapGenerateButton.addActionListener(new MapGenerate(this));
 		
 		playButton.addActionListener(new Play(this));
 		pauseButton.addActionListener(new Pause(this));
@@ -108,7 +101,9 @@ public class Simulation extends JFrame {
 		JLabel rules4 = new JLabel("--Any dead cell with exactly three live neighbours comes to life.");
 		JLabel rules5 = new JLabel("Rules for the Game Of Life");
 		JLabel rules6 = new JLabel("*************************************************************************************************");
-
+		JLabel rules7 = new JLabel("--Current version supports Grid generation and timer, not cell logic or simulation.");
+		
+		
 		//Adds rules to ruleboard
 		rules.add(rules5);
 		rules.add(rules6);
@@ -116,7 +111,8 @@ public class Simulation extends JFrame {
 		rules.add(rules2);
 		rules.add(rules3);
 		rules.add(rules4);
-		
+		rules.add(rules7);
+
 		
 		//adds Buttons to ButtonBoard
 		buttonBoard.add(rowsLabel);
@@ -275,11 +271,11 @@ public class Simulation extends JFrame {
 	
 	// Action listeners
 	
-	public static class Mapgenerate implements ActionListener
+	public static class MapGenerate implements ActionListener
 	{
 		private Simulation simulator;
 		
-		Mapgenerate(Simulation sim)
+		MapGenerate(Simulation sim)
 		{
 			simulator = sim;
 		}
@@ -288,7 +284,7 @@ public class Simulation extends JFrame {
 		{
 			simulator.mapGenerate();
 			
-			System.out.println("Mapgenerate");
+			System.out.println("MapGenerate");
         }
 	}
 	

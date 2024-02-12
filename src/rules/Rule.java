@@ -16,13 +16,8 @@ package rules;
  * (how many of its neighbors are alive/dead, its current state, etc).
  */
 
-
 import data.*;
 
-/*
- * Checks whether certain conditions are met by a cell’s environment 
- * (how many of its neighbors are alive/dead, its current state, etc).
- */
 public class Rule {
 	// If all of these resolve to true
 	private RuleCondition[] conditions;

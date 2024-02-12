@@ -16,14 +16,8 @@ package simulation;
 * If we add multithreading, each CellManager would get its own thread and some number of rows to manage. 
 */
 
-
-
 import data.Neighbors;
 
-/*
- * CellManager class: it iterates over a set of cells during each pass. 
- * If we add multithreading, each CellManager would get its own thread and some number of rows to manage. 
- */
 public class CellManager {
 	private int rowOffset;
 	private int rowCount;

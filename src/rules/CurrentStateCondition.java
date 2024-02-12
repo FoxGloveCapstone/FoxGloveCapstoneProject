@@ -12,7 +12,7 @@ package rules;
 *Professor Sanford
 *February 12, 2024 
 *
-*The NCurrentStateCondition class: it contains a boolean statement about a cell’s current state. 
+*The CurrentStateCondition class: it contains a boolean statement about a cell’s current state. 
 * If this statement is evaluated to be true, this condition is met.
 */
 
@@ -21,10 +21,6 @@ import data.ColorState;
 import data.Neighbors;
 import data.RelOp;
 
-/*
- * Contains a boolean statement about a cell’s current state. 
- * If this statement is evaluated to be true, this condition is met.
- */
 class CurrentStateCondition extends RuleCondition {
 	private ColorState requiredColorState;
 	private RelOp op;

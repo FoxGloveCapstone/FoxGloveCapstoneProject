@@ -15,9 +15,8 @@ package simulation;
 *The Cell class: it Controls the state of a specific cell.
 */
 
-
-
 import rules.*;
+import data.*;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -25,10 +24,6 @@ import java.util.Arrays;
 
 import javax.swing.JButton;
 
-import data.*;
-/*
- * Controls the state of a specific cell.
- */
 public class Cell {
 	private static ArrayList<Rule> ruleset;	
 	private ColorState currentState, nextState, initialState;

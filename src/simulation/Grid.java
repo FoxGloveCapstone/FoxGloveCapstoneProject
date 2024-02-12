@@ -36,12 +36,6 @@ import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
-/*
- *
- * The Grid Class: Acts as a data structure containing the 2D array of Cells. 
- * Since there would only be one grid, making this static would make referencing its methods easier. 
- */
-
 public class Grid {
 	private Cell[][] cells;
 
