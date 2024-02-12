@@ -1,5 +1,22 @@
 package rules;
 
+/*UMGC CAPSTONE PROJECT
+* Title:Game of Life in Java By Team Fox Glove:
+*         Anthony Farias
+          Mitchell Howard
+          Patrick Kamdem
+          Hyrum Madson
+          Bensaiten Sanchez Flores 
+          
+*CMSC 495 7380
+*Professor Sanford
+*February 12, 2024 
+*
+*The NCurrentStateCondition class: it contains a boolean statement about a cell’s current state. 
+* If this statement is evaluated to be true, this condition is met.
+*/
+
+
 import data.ColorState;
 import data.Neighbors;
 import data.RelOp;

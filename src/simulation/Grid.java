@@ -1,5 +1,21 @@
 package simulation;
 
+/*UMGC CAPSTONE PROJECT
+ * Title:Game of Life in Java By Team Fox Glove:
+ *         Anthony Farias
+           Mitchell Howard
+           Patrick Kamdem
+           Hyrum Madson
+           Bensaiten Sanchez Flores 
+           
+ *CMSC 495 7380
+ *Professor Sanford
+ *February 12, 2024 
+ *
+ * The Grid Class: Acts as a data structure containing the 2D array of Cells. 
+ * Since there would only be one grid, making this static would make referencing its methods easier. 
+ */
+
 import data.ColorState;
 import data.Neighbors;
 
@@ -21,9 +37,11 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 /*
- * Acts as a data structure containing the 2D array of Cells. 
+ *
+ * The Grid Class: Acts as a data structure containing the 2D array of Cells. 
  * Since there would only be one grid, making this static would make referencing its methods easier. 
  */
+
 public class Grid {
 	private Cell[][] cells;
 

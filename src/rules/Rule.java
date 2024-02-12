@@ -1,5 +1,22 @@
 package rules;
 
+/*UMGC CAPSTONE PROJECT
+* Title:Game of Life in Java By Team Fox Glove:
+*         Anthony Farias
+          Mitchell Howard
+          Patrick Kamdem
+          Hyrum Madson
+          Bensaiten Sanchez Flores 
+          
+*CMSC 495 7380
+*Professor Sanford
+*February 12, 2024 
+*
+*The Rule class: it checks whether certain conditions are met by a cell’s environment 
+ * (how many of its neighbors are alive/dead, its current state, etc).
+ */
+
+
 import data.*;
 
 /*

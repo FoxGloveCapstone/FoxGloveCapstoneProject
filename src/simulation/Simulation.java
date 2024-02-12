@@ -1,5 +1,25 @@
 package simulation;
 
+/*UMGC CAPSTONE PROJECT
+ * Title:Game of Life in Java By Team Fox Glove:
+ *         Anthony Farias
+           Mitchell Howard
+           Patrick Kamdem
+           Hyrum Madson
+           Bensaiten Sanchez Flores 
+ * 
+ *CMSC 495 7380
+ *Professor Sanford
+ *February 12, 2024 
+ *
+ *The Simulation class: Controls the flow and execution of the simulation. 
+ * This will most likely be the central class. 
+ * It controls the timing and the main GUI. 
+ */
+
+
+
+
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
