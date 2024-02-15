@@ -55,6 +55,7 @@ public class Grid {
 				// we probably don't want the buttons labeled.
 				JButton button = new JButton();
 				Cell cell = new Cell(button);
+				cells[x][y] = cell;
 				
 				// Sets the buttons size, its important to do this so that the buttons are square shaped
 				button.setPreferredSize(new Dimension(30, 30));
@@ -73,49 +74,47 @@ public class Grid {
 	public static Neighbors getNeighborsOf(int x, int y) {
 		Neighbors n = new Neighbors();
 		Cell cell;
-		for(int i = 0; i < 8; i++) {
-			// Get top-left neighbor 
-			if(x - 1 > 0 && y - 1 > 0) {
-				cell = Grid.getCellAt(x - 1, y - 1);
-				n.add(cell.getColorState());
-			}
-			// Get top neighbor
-			if(y - 1 > 0) {
-				cell = Grid.getCellAt(x, y - 1);
-				n.add(cell.getColorState());
-			}
-			// Get top-right neighbor
-			if(x + 1 < width && y - 1 > 0) {
-				cell = Grid.getCellAt(x + 1, y - 1);
-				n.add(cell.getColorState());
-			}
-			// Get left neighbor
-			if(x - 1 > 0) {
-				cell = Grid.getCellAt(x - 1, y);
-				n.add(cell.getColorState());
-			}
-			// Get right neighbor
-			if(x + 1 < width) {
-				cell = Grid.getCellAt(x + 1, y);
-				n.add(cell.getColorState());
-			}
-			// Get bottom-left neighbor
-			if(x - 1 > 0 && y + 1 < height) {
-				cell = Grid.getCellAt(x - 1, y + 1);
-				n.add(cell.getColorState());
-			}
-			// Get bottom neighbor
-			if(y + 1 < height) {
-				cell = Grid.getCellAt(x, y + 1);
-				n.add(cell.getColorState());
-			}
-			// Get bottom-right neighbor
-			if(x + 1 < width && y + 1 < height) {
-				cell = Grid.getCellAt(x + 1, y + 1);
-				n.add(cell.getColorState());
-			}
-
+		// Get top-left neighbor 
+		if(x - 1 > 0 && y - 1 > 0) {
+			cell = Grid.getCellAt(x - 1, y - 1);
+			n.add(cell.getColorState());
 		}
+		// Get top neighbor
+		if(y - 1 > 0) {
+			cell = Grid.getCellAt(x, y - 1);
+			n.add(cell.getColorState());
+		}
+		// Get top-right neighbor
+		if(x + 1 < width && y - 1 > 0) {
+			cell = Grid.getCellAt(x + 1, y - 1);
+			n.add(cell.getColorState());
+		}
+		// Get left neighbor
+		if(x - 1 > 0) {
+			cell = Grid.getCellAt(x - 1, y);
+			n.add(cell.getColorState());
+		}
+		// Get right neighbor
+		if(x + 1 < width) {
+			cell = Grid.getCellAt(x + 1, y);
+			n.add(cell.getColorState());
+		}
+		// Get bottom-left neighbor
+		if(x - 1 > 0 && y + 1 < height) {
+			cell = Grid.getCellAt(x - 1, y + 1);
+			n.add(cell.getColorState());
+		}
+		// Get bottom neighbor
+		if(y + 1 < height) {
+			cell = Grid.getCellAt(x, y + 1);
+			n.add(cell.getColorState());
+		}
+		// Get bottom-right neighbor
+		if(x + 1 < width && y + 1 < height) {
+			cell = Grid.getCellAt(x + 1, y + 1);
+			n.add(cell.getColorState());
+		}
+
 
 		return n;
 	}

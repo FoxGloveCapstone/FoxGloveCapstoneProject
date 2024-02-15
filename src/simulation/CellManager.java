@@ -33,26 +33,23 @@ public class CellManager {
 	}
 	
 	public void calculateFrame() {
-		// Calculation pass
+		// Calculation pass.
 		for(int x = 0; x < Grid.width; x++) {
 			for(int y = rowOffset; y < rowCount; y++) {
 				Cell currentCell = Grid.getCellAt(x, y);
 				Neighbors neighbors = Grid.getNeighborsOf(x, y);
 				currentCell.calculateNextStep(neighbors);
 			}
-		}
-
-		// Tell cells to change colors
+		}		
+	}
+	
+	public void updateGUI() {
+		// Tell cells to change colors.
 		for(int x = 0; x < Grid.width; x++) {
 			for(int y = rowOffset; y < rowCount; y++) {
 				Cell currentCell = Grid.getCellAt(x, y);
 				currentCell.updateGUI();
 			}
-		}
-		
-	}
-	
-	public void updateGUI() {
-		
+		}	
 	}
 }

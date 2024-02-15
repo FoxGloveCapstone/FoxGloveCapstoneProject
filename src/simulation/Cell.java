@@ -30,6 +30,7 @@ public class Cell {
 	private JButton guiElement;
 
 	public static void setRuleSet(Rule[] rules) {
+		ruleset = new ArrayList<>();
 		ruleset.addAll(Arrays.asList(rules));
 	}
 	
@@ -51,11 +52,25 @@ public class Cell {
 	}
 	
 	public void calculateNextStep(Neighbors neighbors) {
+		ColorState col;
 		
+		for(Rule rule: ruleset) {
+			col = rule.check(neighbors, currentState);
+			if(col != null) {
+				nextState = col;
+				return;
+			}
+		}
+		
+		nextState = currentState;
 	}
 	
 	public void updateGUI() {
+		currentState = nextState;
 		
+		// Set button color
+		Color color = ColorState.colorStateToRGB(currentState);
+		guiElement.setBackground(color);
 	}
 	
 	/* Getter and Setter */

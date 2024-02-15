@@ -36,6 +36,8 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import rules.Rule;
+
 public class Simulation extends JFrame {
 	private CellManager[] threads;
 	private int currentStep;
@@ -62,6 +64,7 @@ public class Simulation extends JFrame {
 		JPanel buttonBoard = new JPanel(new FlowLayout());		
 		JPanel rules = new JPanel();		
 		JSplitPane ruleBoard = new JSplitPane(SwingConstants.HORIZONTAL, rules, buttonBoard);
+		Cell.setRuleSet(Rule.getDefaultRuleset());
 		//GridLayout gridLayout = new GridLayout();
 		
 		//gridBoard.add(gridLayout);
@@ -170,6 +173,11 @@ public class Simulation extends JFrame {
 	{
 		currentStep++;
 		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
+		
+		for(CellManager thread: threads) {
+			thread.calculateFrame();
+			thread.updateGUI();
+		}
 	}
 	
 	//resets the map and ticker
@@ -258,6 +266,8 @@ public class Simulation extends JFrame {
 			fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
 			tickSpeed = 10;
 			speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+			
+			threads = new CellManager[] { new CellManager() };
 		}
 		catch(NumberFormatException s)
 		{
