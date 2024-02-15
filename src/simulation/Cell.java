@@ -50,7 +50,6 @@ public class Cell {
 		setColorState(ColorState.WHITE);
 	}
 	
-
 	public void calculateNextStep(Neighbors neighbors) {
 		
 	}
@@ -72,5 +71,4 @@ public class Cell {
 	public ColorState getColorState() {
 		return currentState;
 	}
-	
 }

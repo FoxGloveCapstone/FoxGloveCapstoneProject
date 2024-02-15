@@ -21,8 +21,34 @@ import data.Neighbors;
 public class CellManager {
 	private int rowOffset;
 	private int rowCount;
+
+	public CellManager() {
+		rowOffset = 0;
+		this.rowCount = Grid.height;
+	}
+	
+	public CellManager(int rowCount, int rowOffset) {
+		this.rowCount = rowCount;
+		this.rowOffset = rowOffset;
+	}
 	
 	public void calculateFrame() {
+		// Calculation pass
+		for(int x = 0; x < Grid.width; x++) {
+			for(int y = rowOffset; y < rowCount; y++) {
+				Cell currentCell = Grid.getCellAt(x, y);
+				Neighbors neighbors = Grid.getNeighborsOf(x, y);
+				currentCell.calculateNextStep(neighbors);
+			}
+		}
+
+		// Tell cells to change colors
+		for(int x = 0; x < Grid.width; x++) {
+			for(int y = rowOffset; y < rowCount; y++) {
+				Cell currentCell = Grid.getCellAt(x, y);
+				currentCell.updateGUI();
+			}
+		}
 		
 	}
 	

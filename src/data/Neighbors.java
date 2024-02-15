@@ -30,6 +30,9 @@ public class Neighbors {
 		// Otherwise, a new entry is created in the map.
 		neighbors.merge(key, value, Integer::sum);
 	}
+	public void add(ColorState key) {
+		add(key, 1);
+	}
 	
 	public int get(ColorState key) {
 		return neighbors.getOrDefault(key, 0);

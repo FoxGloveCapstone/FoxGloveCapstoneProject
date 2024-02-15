@@ -37,9 +37,15 @@ import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 
 public class Grid {
-	private Cell[][] cells;
+	private static Cell[][] cells;
+	// These are here temporarily, we can change it to a method or readonly
+	public static int width;
+	public static int height;
+	
+	public static void generate(JPanel gridPanel, int width, int height) {
+		Grid.width = width;
+		Grid.height = height;
 
-	public void generate(JPanel gridPanel, int width, int height) {
 		cells = new Cell[width][height];
 		gridPanel.setLayout(new GridLayout(width, height));
 
@@ -60,15 +66,61 @@ public class Grid {
 		}
 	}
 	
-	public void generateRandom(String seed, int width, int height) {
+	public static void generateRandom(String seed, int width, int height) {
 		
 	}
 	
-	public Neighbors getNeighborsOf(int x, int y) {
-		return null;
+	public static Neighbors getNeighborsOf(int x, int y) {
+		Neighbors n = new Neighbors();
+		Cell cell;
+		for(int i = 0; i < 8; i++) {
+			// Get top-left neighbor 
+			if(x - 1 > 0 && y - 1 > 0) {
+				cell = Grid.getCellAt(x - 1, y - 1);
+				n.add(cell.getColorState());
+			}
+			// Get top neighbor
+			if(y - 1 > 0) {
+				cell = Grid.getCellAt(x, y - 1);
+				n.add(cell.getColorState());
+			}
+			// Get top-right neighbor
+			if(x + 1 < width && y - 1 > 0) {
+				cell = Grid.getCellAt(x + 1, y - 1);
+				n.add(cell.getColorState());
+			}
+			// Get left neighbor
+			if(x - 1 > 0) {
+				cell = Grid.getCellAt(x - 1, y);
+				n.add(cell.getColorState());
+			}
+			// Get right neighbor
+			if(x + 1 < width) {
+				cell = Grid.getCellAt(x + 1, y);
+				n.add(cell.getColorState());
+			}
+			// Get bottom-left neighbor
+			if(x - 1 > 0 && y + 1 < height) {
+				cell = Grid.getCellAt(x - 1, y + 1);
+				n.add(cell.getColorState());
+			}
+			// Get bottom neighbor
+			if(y + 1 < height) {
+				cell = Grid.getCellAt(x, y + 1);
+				n.add(cell.getColorState());
+			}
+			// Get bottom-right neighbor
+			if(x + 1 < width && y + 1 < height) {
+				cell = Grid.getCellAt(x + 1, y + 1);
+				n.add(cell.getColorState());
+			}
+
+		}
+
+		return n;
 	}
 	
-	public Cell getCellAt(int x, int y) {
+	public static Cell getCellAt(int x, int y) {
 		// Caller must guarantee indices are in bounds.
 		return cells[x][y];
 	}
