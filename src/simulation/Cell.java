@@ -26,29 +26,16 @@ import javax.swing.JButton;
 
 public class Cell {
 	private static ArrayList<Rule> ruleset;	
+	// The value of cells when first instantiated.
+	private final ColorState STARTING_STATE = ColorState.WHITE;
+	// Initial state is starting state by default, but can be overwritten by the user.
 	private ColorState currentState, nextState, initialState;
 	private JButton guiElement;
 
-	public static void setRuleSet(Rule[] rules) {
-		ruleset = new ArrayList<>();
-		ruleset.addAll(Arrays.asList(rules));
-	}
-	
-	public static void addRule(Rule rule) {
-		ruleset.add(rule);
-	}
-	
-	public static void removeRule(Rule rule) {
-		ruleset.remove(rule);
-	}
-	
-	public static void removeRule(int index) {
-		ruleset.remove(index);
-	}
-	
+
 	public Cell(JButton guiElement) {
 		this.guiElement = guiElement;
-		setColorState(ColorState.WHITE);
+		setColorState(STARTING_STATE);
 	}
 	
 	public void calculateNextStep(Neighbors neighbors) {
@@ -71,6 +58,39 @@ public class Cell {
 		// Set button color
 		Color color = ColorState.colorStateToRGB(currentState);
 		guiElement.setBackground(color);
+	}
+	
+	// If user manually set state of cell, return to that state
+	// Else return to starting state
+	public void resetColorState() {
+		nextState = initialState;
+		// updateGUI sets currentState = nextState;
+		updateGUI();
+	}
+	
+	// Return to starting state of cells
+	public void clearColorState() {
+		nextState = STARTING_STATE;
+		// updateGUI sets currentState = nextState;
+		updateGUI();
+	}
+
+	/* Ruleset methods */
+	public static void setRuleSet(Rule[] rules) {
+		ruleset = new ArrayList<>();
+		ruleset.addAll(Arrays.asList(rules));
+	}
+	
+	public static void addRule(Rule rule) {
+		ruleset.add(rule);
+	}
+	
+	public static void removeRule(Rule rule) {
+		ruleset.remove(rule);
+	}
+	
+	public static void removeRule(int index) {
+		ruleset.remove(index);
 	}
 	
 	/* Getter and Setter */

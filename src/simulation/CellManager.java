@@ -32,8 +32,9 @@ public class CellManager {
 		this.rowOffset = rowOffset;
 	}
 	
+	// Calculation pass.
+	// Tell cells to calculate their state in the next frame.
 	public void calculateFrame() {
-		// Calculation pass.
 		for(int x = 0; x < Grid.width; x++) {
 			for(int y = rowOffset; y < rowCount; y++) {
 				Cell currentCell = Grid.getCellAt(x, y);
@@ -43,8 +44,9 @@ public class CellManager {
 		}		
 	}
 	
+	// Update pass.
+	// Tell cells to change colors.
 	public void updateGUI() {
-		// Tell cells to change colors.
 		for(int x = 0; x < Grid.width; x++) {
 			for(int y = rowOffset; y < rowCount; y++) {
 				Cell currentCell = Grid.getCellAt(x, y);

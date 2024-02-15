@@ -81,6 +81,7 @@ public class Simulation extends JFrame {
 		JButton pauseButton = new JButton("Pause");
 		JButton nextButton = new JButton("Next");
 		JButton clearButton = new JButton("Clear");
+		JButton resetButton = new JButton("Reset");
 		JButton slowButton = new JButton("<-");
 		
 		JButton speedButton = new JButton("->");
@@ -90,9 +91,10 @@ public class Simulation extends JFrame {
 		playButton.addActionListener(new Play(this));
 		pauseButton.addActionListener(new Pause(this));
 		nextButton.addActionListener(new Step(this));
-		slowButton.addActionListener(new Lowerspeed(this));
-		speedButton.addActionListener(new Increasespeed(this));
-		clearButton.addActionListener(new Reset(this)); 
+		slowButton.addActionListener(new LowerSpeed(this));
+		speedButton.addActionListener(new IncreaseSpeed(this));
+		clearButton.addActionListener(new Clear(this)); 
+		resetButton.addActionListener(new Reset(this));
 
 		
 		//Labels for the rules section
@@ -127,6 +129,7 @@ public class Simulation extends JFrame {
 		buttonBoard.add(pauseButton);
 		buttonBoard.add(nextButton);
 		buttonBoard.add(clearButton);
+		buttonBoard.add(resetButton);
 		buttonBoard.add(slowButton);
 		buttonBoard.add(speedDisplay);
 		buttonBoard.add(speedButton);
@@ -180,19 +183,33 @@ public class Simulation extends JFrame {
 		}
 	}
 	
-	//resets the map and ticker
-	public void reset() 
+	// Helper method used to bring the simulation back to its initial state
+	private void clearGridBoard() 
 	{
-		setVisible(false);
-		gridBoard.removeAll();
+		//setVisible(false);
+		//gridBoard.removeAll();
 		currentStep = 0;
 		timer.stop();
 		timer.setDelay(1000);
-		System.out.println("Reset");
-		setVisible(true);
+		//setVisible(true);
 		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
 		tickSpeed = 10;
 		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+	}
+	
+	// Clears the map such that all cells are dead
+	public void clear() 
+	{
+		clearGridBoard();
+		Grid.clear();
+	}
+	
+	// Resets the map to its initial state. 
+	// This is whatever the user has drawn.
+	public void reset() 
+	{
+		clearGridBoard();
+		Grid.reset();
 	}
 	
 	//increases ticker speed
@@ -277,7 +294,6 @@ public class Simulation extends JFrame {
 	}
 	
 	
-	
 	// Action listeners
 	
 	public static class MapGenerate implements ActionListener
@@ -355,16 +371,31 @@ public class Simulation extends JFrame {
 		public void actionPerformed(ActionEvent e) 
 		{	
 			simulator.reset();
-			
 			System.out.println("Reset");
         }
 	}
-	
-	public static class Lowerspeed implements ActionListener
+	public static class Clear implements ActionListener
 	{
 		private Simulation simulator;
 		
-		Lowerspeed(Simulation sim)
+		Clear(Simulation sim)
+		{
+			simulator = sim;
+		}
+		
+		public void actionPerformed(ActionEvent e) 
+		{	
+			simulator.clear();
+			System.out.println("Clear");
+        }
+	}
+	
+	
+	public static class LowerSpeed implements ActionListener
+	{
+		private Simulation simulator;
+		
+		LowerSpeed(Simulation sim)
 		{
 			simulator = sim;
 		}
@@ -377,11 +408,11 @@ public class Simulation extends JFrame {
         }
 	}
 	
-	public static class Increasespeed implements ActionListener
+	public static class IncreaseSpeed implements ActionListener
 	{
 		private Simulation simulator;
 		
-		Increasespeed(Simulation sim)
+		IncreaseSpeed(Simulation sim)
 		{
 			simulator = sim;
 		}
