@@ -75,22 +75,22 @@ public class Grid {
 		Neighbors n = new Neighbors();
 		Cell cell;
 		// Get top-left neighbor 
-		if(x - 1 > 0 && y - 1 > 0) {
+		if(x - 1 > -1 && y - 1 > -1) {
 			cell = Grid.getCellAt(x - 1, y - 1);
 			n.add(cell.getColorState());
 		}
 		// Get top neighbor
-		if(y - 1 > 0) {
+		if(y - 1 > -1) {
 			cell = Grid.getCellAt(x, y - 1);
 			n.add(cell.getColorState());
 		}
 		// Get top-right neighbor
-		if(x + 1 < width && y - 1 > 0) {
+		if(x + 1 < width && y - 1 > -1) {
 			cell = Grid.getCellAt(x + 1, y - 1);
 			n.add(cell.getColorState());
 		}
 		// Get left neighbor
-		if(x - 1 > 0) {
+		if(x - 1 > -1) {
 			cell = Grid.getCellAt(x - 1, y);
 			n.add(cell.getColorState());
 		}
@@ -100,7 +100,7 @@ public class Grid {
 			n.add(cell.getColorState());
 		}
 		// Get bottom-left neighbor
-		if(x - 1 > 0 && y + 1 < height) {
+		if(x - 1 > -1 && y + 1 < height) {
 			cell = Grid.getCellAt(x - 1, y + 1);
 			n.add(cell.getColorState());
 		}
