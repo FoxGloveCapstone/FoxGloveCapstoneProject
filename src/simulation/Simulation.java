@@ -106,7 +106,6 @@ public class Simulation extends JFrame {
 		JLabel rules4 = new JLabel("--Any dead cell with exactly three live neighbours comes to life.");
 		JLabel rules5 = new JLabel("Rules for the Game Of Life");
 		JLabel rules6 = new JLabel("*************************************************************************************************");
-		JLabel rules7 = new JLabel("--Current version supports Grid generation and timer, not cell logic or simulation.");
 		
 		
 		//Adds rules to ruleboard
@@ -116,7 +115,6 @@ public class Simulation extends JFrame {
 		rules.add(rules2);
 		rules.add(rules3);
 		rules.add(rules4);
-		rules.add(rules7);
 
 		
 		//adds Buttons to ButtonBoard
