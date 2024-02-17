@@ -272,6 +272,7 @@ public class Simulation extends JFrame {
 		{
 			int generateR = Integer.parseInt(generateRows);
 			int generateC = Integer.parseInt(generateColumns);
+			gridBoard.removeAll();
 			Grid.generate(gridBoard, generateR, generateC);
 			setVisible(true);
 			currentStep = 0;
