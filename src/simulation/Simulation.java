@@ -284,9 +284,9 @@ public class Simulation extends JFrame {
 			
 			threads = new CellManager[] { new CellManager() };
 		}
-		catch(NumberFormatException s)
+		catch(Exception s)
 		{
-	           JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a Number!", 
+			JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
                        "ERROR", JOptionPane.ERROR_MESSAGE);
 		}
 	}
