@@ -43,7 +43,7 @@ public class Simulation extends JFrame {
 
 	private CellManager[] threads;
 	private int currentStep;
-	private int tickSpeed = 10;
+	private int tickDelay = 10;
 	private Timer timer;
 	
 	//Some aspect of the UI have to be declared here to be accessible 
@@ -65,15 +65,15 @@ public class Simulation extends JFrame {
 		buildGUI();
 
 		//Timer is implemented for the ticker functionality, default delay of 1 second
-		timer = new Timer(1000, new ActionListener() 
-		{
+		timer = new Timer(1000, new ActionListener() {
             @Override
-            public void actionPerformed(ActionEvent e) 
-            {
+            public void actionPerformed(ActionEvent e) {
             	step();
             }
         });
-		Grid.generate(gridBoard, 10, 10);
+
+		// Create a grid to start
+		generateMap(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE);
 	}
 	
 	/* GUI Builder */
@@ -106,15 +106,15 @@ public class Simulation extends JFrame {
 		JButton slowButton = new JButton("<-");
 		JButton speedButton = new JButton("->");
 		
-		mapGenerateButton.addActionListener(new MapGenerate(this));
+		mapGenerateButton.addActionListener(new MapGenerate());
 		
-		playButton.addActionListener(new Play(this));
-		pauseButton.addActionListener(new Pause(this));
-		nextButton.addActionListener(new Step(this));
-		slowButton.addActionListener(new LowerSpeed(this));
-		speedButton.addActionListener(new IncreaseSpeed(this));
-		clearButton.addActionListener(new Clear(this)); 
-		resetButton.addActionListener(new Reset(this));
+		playButton.addActionListener(new Play());
+		pauseButton.addActionListener(new Pause());
+		nextButton.addActionListener(new Step());
+		slowButton.addActionListener(new DecreaseSpeed());
+		speedButton.addActionListener(new IncreaseSpeed());
+		clearButton.addActionListener(new Clear()); 
+		resetButton.addActionListener(new Reset());
 
 		
 		JLabel rowsLabel = new JLabel ("Rows");
@@ -177,25 +177,10 @@ public class Simulation extends JFrame {
 		return controlBoard;
 	}
 	
-	/* Simulation Controls */
-	//all control methods are called within action listeners, the step method is also called from the timer.
-	
-	//starts the timer and modifies the speed display
-	public void start() 
-	{
-		timer.start();
-		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
-	}
-	
-	//stops the timer
-	public void pause()
-	{
-		timer.stop();
-	}
-	
-	//increments the tick by 1
-	public void step() 
-	{
+	/* Simulation Controls Helpers */ 
+
+	// Advance to next frame.
+	public void step() {
 		currentStep++;
 		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
 		
@@ -204,246 +189,134 @@ public class Simulation extends JFrame {
 			thread.updateGUI();
 		}
 	}
-	
-	// Helper method used to bring the simulation back to its initial state
-	private void clearGridBoard() 
-	{
-		//setVisible(false);
-		//gridBoard.removeAll();
+	// Helper method used to bring the simulation back to its initial state.
+	private void clearGridBoard() {
 		currentStep = 0;
 		timer.stop();
 		timer.setDelay(1000);
-		//setVisible(true);
 		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
-		tickSpeed = 10;
+		tickDelay = 10;
 		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
 	}
-	
-	// Clears the map such that all cells are dead
-	public void clear() 
-	{
+	// Helper method to create a new grid.
+	private void generateMap(int rows, int columns) {
+		// Clear board and regenerate.
+		gridBoard.removeAll();
+		Grid.generate(gridBoard, rows, columns);
+		setVisible(true);
+		
+		// Reset simulation parameters.
 		clearGridBoard();
-		Grid.clear();
+
+		// Create new cellmanager(s)
+		threads = new CellManager[] { new CellManager() };
 	}
-	
-	// Resets the map to its initial state. 
-	// This is whatever the user has drawn.
-	public void reset() 
-	{
-		clearGridBoard();
-		Grid.reset();
-	}
-	
-	//increases ticker speed
-	public void increaseSpeed() 
-	{
-		tickSpeed--;
-		
-		//prevents speeds above 10 ticks per second
-		if(tickSpeed < 1)
-		{
-			tickSpeed = 1;
-		}
-		
-		//sets delay value
-		if(tickSpeed <= 10)
-		{
-			timer.setDelay(tickSpeed * 100);
+	// Helper method to set and format speed display.
+	private void setSpeedDisplay() {
+		// Sets delay value
+		if(tickDelay <= 10) {
+			timer.setDelay(tickDelay * 100);
 			System.out.println(timer.getDelay());
 		}
-		else
-		{
-			timer.setDelay((tickSpeed - 9) * 1000);
+
+		else {
+			timer.setDelay((tickDelay - 9) * 1000);
 			System.out.println(timer.getDelay());
 		}
-		
-		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+
+		speedDisplay.setText(String.format("Ticks per Second: %.2f", 1000.0/timer.getDelay()));
 	}
+
+	/* Simulation Controls Action Listeners */
 	
-	//decreases ticker speed
-	public void decreaseSpeed() 
-	{
-		tickSpeed++;
-		
-		//prevents negative speed
-		if(tickSpeed > 19)
-		{
-			tickSpeed = 19;
-		}
-		
-		//sets delay value
-		if(tickSpeed <= 10)
-		{
-			timer.setDelay(tickSpeed * 100);
-			System.out.println(timer.getDelay());
-		}
-		else
-		{
-			timer.setDelay((tickSpeed - 9) * 1000);
-			System.out.println(timer.getDelay());
-		}
-		
-		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
-	}
-	
-	//generates map based on user input
-	public void mapGenerate()
-	{
-		String generateRows = rowsField.getText();
-		String generateColumns = columnsField.getText();
-		try 
-		{
-			int generateR = Integer.parseInt(generateRows);
-			int generateC = Integer.parseInt(generateColumns);
-			gridBoard.removeAll();
-			Grid.generate(gridBoard, generateR, generateC);
-			setVisible(true);
-			currentStep = 0;
-			timer.stop();
-			timer.setDelay(1000);
-			fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
-			tickSpeed = 10;
-			speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
-			
-			threads = new CellManager[] { new CellManager() };
-		}
-		catch(Exception s)
-		{
-			JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
-                       "ERROR", JOptionPane.ERROR_MESSAGE);
-		}
-	}
-	
-	
-	// Action listeners
-	
-	public static class MapGenerate implements ActionListener
-	{
-		private Simulation simulator;
-		
-		MapGenerate(Simulation sim)
-		{
-			simulator = sim;
-		}
-		
-		public void actionPerformed(ActionEvent e) 
-		{
-			simulator.mapGenerate();
-			
+	// Parse user input for number of rows and columns.
+	// Then create new grid.
+	public class MapGenerate implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			// Get user input from text fields.
+			String generateRows = rowsField.getText();
+			String generateColumns = columnsField.getText();
+			try {
+				// Parse input to int. 
+				int generateR = Integer.parseInt(generateRows);
+				int generateC = Integer.parseInt(generateColumns);
+
+				generateMap(generateR, generateC);
+			}
+			catch(Exception s) {
+				JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
+						"ERROR", JOptionPane.ERROR_MESSAGE);
+			}
+			// Print to console for debugging.
 			System.out.println("MapGenerate");
         }
 	}
-	
-	public static class Play implements ActionListener
-	{
-		private Simulation simulator;
-		
-		Play(Simulation sim)
-		{
-			simulator = sim;
-		}
-		
-		public void actionPerformed(ActionEvent e) 
-		{
+	// Starts the timer and modifies the speed display.
+	public class Play implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			setSpeedDisplay();
+			timer.start();
 			System.out.println("Play");
-			simulator.start();
         }
 	}
-	
-	public static class Pause implements ActionListener
-	{
-		private Simulation simulator;
-		
-		Pause(Simulation sim)
-		{
-			simulator = sim;
-		}
-		public void actionPerformed(ActionEvent e) 
-		{
+	// Stops the timer.
+	public class Pause implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			timer.stop();
 			System.out.println("Pause");
-			simulator.pause();
         }
 	}
-	
-	public static class Step implements ActionListener
-	{
-		private Simulation simulator;
-		
-		Step(Simulation sim)
-		{
-			simulator = sim;
-		}
-		public void actionPerformed(ActionEvent e) 
-		{
+	// Advance to next frame.
+	public class Step implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
 			System.out.println("Step");
-			simulator.step();
+			step();
         }
 	}
-	
-	public static class Reset implements ActionListener
-	{
-		private Simulation simulator;
-		
-		Reset(Simulation sim)
-		{
-			simulator = sim;
-		}
-		
-		public void actionPerformed(ActionEvent e) 
-		{	
-			simulator.reset();
+	// Resets the map to its initial state. 
+	// This preserves whatever the user has drawn.
+	public class Reset implements ActionListener {
+		public void actionPerformed(ActionEvent e) {	
+			clearGridBoard();
+			Grid.reset();
 			System.out.println("Reset");
         }
 	}
-	public static class Clear implements ActionListener
-	{
-		private Simulation simulator;
-		
-		Clear(Simulation sim)
-		{
-			simulator = sim;
-		}
-		
-		public void actionPerformed(ActionEvent e) 
-		{	
-			simulator.clear();
+	// Clears the map such that all cells are dead
+	public class Clear implements ActionListener {
+		public void actionPerformed(ActionEvent e) {	
+			clearGridBoard();
+			Grid.clear();
 			System.out.println("Clear");
         }
 	}
-	
-	
-	public static class LowerSpeed implements ActionListener
-	{
-		private Simulation simulator;
-		
-		LowerSpeed(Simulation sim)
-		{
-			simulator = sim;
-		}
-		
-		public void actionPerformed(ActionEvent e) 
-		{
-			simulator.decreaseSpeed();
-			
+	// Increases ticker speed
+	public class IncreaseSpeed implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			tickDelay--;
+
+			//prevents speeds above 10 ticks per second
+			if(tickDelay < 1) {
+				tickDelay = 1;
+			}
+
+			setSpeedDisplay();
 			System.out.println("lower speed");
         }
 	}
 	
-	public static class IncreaseSpeed implements ActionListener
-	{
-		private Simulation simulator;
-		
-		IncreaseSpeed(Simulation sim)
-		{
-			simulator = sim;
-		}
-		
-		public void actionPerformed(ActionEvent e) 
-		{
-			simulator.increaseSpeed();
-			
+	// Decreases ticker speed
+	public class DecreaseSpeed implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			tickDelay++;
+
+			//prevents negative speed
+			if(tickDelay > 19) {
+				tickDelay = 19;
+			}
+
+			setSpeedDisplay();
 			System.out.println("Increase speed");
         }
 	}
-	
 }
