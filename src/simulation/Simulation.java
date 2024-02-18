@@ -39,6 +39,8 @@ import javax.swing.Timer;
 import rules.Rule;
 
 public class Simulation extends JFrame {
+	private final int DEFAULT_GRID_SIZE = 10;
+
 	private CellManager[] threads;
 	private int currentStep;
 	private int tickSpeed = 10;
@@ -47,9 +49,9 @@ public class Simulation extends JFrame {
 	//Some aspect of the UI have to be declared here to be accessible 
 	private JLabel fCounter = new JLabel("Frame Counter: ");
 	private JLabel speedDisplay = new JLabel("Ticks Per Second: 1");
-	private JPanel gridBoard = new JPanel(new GridLayout(10, 10));
-	private JTextField rowsField = new JTextField("10");
-	private JTextField columnsField = new JTextField("10");
+	private JPanel gridBoard = new JPanel(new GridLayout(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE));
+	private JTextField rowsField = new JTextField("" + DEFAULT_GRID_SIZE);
+	private JTextField columnsField = new JTextField("" + DEFAULT_GRID_SIZE);
 
 	public static void main(String[] args) {
         Simulation window = new Simulation();
@@ -59,20 +61,39 @@ public class Simulation extends JFrame {
 
 	public Simulation() {
 		super("Game of Life");
-
-		//Sets the panels being used
-		JPanel buttonBoard = new JPanel(new FlowLayout());		
-		JPanel rules = new JPanel();		
-		JSplitPane ruleBoard = new JSplitPane(SwingConstants.HORIZONTAL, rules, buttonBoard);
 		Cell.setRuleSet(Rule.getDefaultRuleset());
-		//GridLayout gridLayout = new GridLayout();
-		
-		//gridBoard.add(gridLayout);
-		
-		//Sets Dimensions on side grid and divider location on the splitpane
-		ruleBoard.setDividerLocation(350);
+		buildGUI();
+
+		//Timer is implemented for the ticker functionality, default delay of 1 second
+		timer = new Timer(1000, new ActionListener() 
+		{
+            @Override
+            public void actionPerformed(ActionEvent e) 
+            {
+            	step();
+            }
+        });
+		Grid.generate(gridBoard, 10, 10);
+	}
+	
+	/* GUI Builder */
+	// Initialize instance-level GUI elements and create panels.
+	private void buildGUI() {
+		JSplitPane controlBoard = buildControlBoard();
+
+		//Adds borderlayout and boards to the JFrame
+		add(gridBoard, BorderLayout.WEST);
+		add(controlBoard, BorderLayout.CENTER);
+	
 		gridBoard.setPreferredSize(new Dimension(800,900));
-		
+		//Close and Size functions for JFrame
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(new Dimension(1400, 800));
+	}
+	// Create buttons that control simulation.
+	private JPanel buildButtonBoard() {
+		JPanel buttonBoard = new JPanel(new FlowLayout());		
+
 		//Buttons and Textfields for operations
 		rowsField.setColumns(10);
 		columnsField.setColumns(10);
@@ -83,7 +104,6 @@ public class Simulation extends JFrame {
 		JButton clearButton = new JButton("Clear");
 		JButton resetButton = new JButton("Reset");
 		JButton slowButton = new JButton("<-");
-		
 		JButton speedButton = new JButton("->");
 		
 		mapGenerateButton.addActionListener(new MapGenerate(this));
@@ -97,26 +117,8 @@ public class Simulation extends JFrame {
 		resetButton.addActionListener(new Reset(this));
 
 		
-		//Labels for the rules section
 		JLabel rowsLabel = new JLabel ("Rows");
 		JLabel columnsLabel = new JLabel("Columns");
-		JLabel rules1 = new JLabel("--Any live cell with fewer than two live neighbours dies (referred to as underpopulation).");
-		JLabel rules2 = new JLabel("--Any live cell with more than three live neighbours dies (referred to as overpopulation).");
-		JLabel rules3 = new JLabel("--Any live cell with two or three live neighbours lives, unchanged, to the next generation.");
-		JLabel rules4 = new JLabel("--Any dead cell with exactly three live neighbours comes to life.");
-		JLabel rules5 = new JLabel("Rules for the Game Of Life");
-		JLabel rules6 = new JLabel("*************************************************************************************************");
-		
-		
-		//Adds rules to ruleboard
-		rules.add(rules5);
-		rules.add(rules6);
-		rules.add(rules1);
-		rules.add(rules2);
-		rules.add(rules3);
-		rules.add(rules4);
-
-		
 		//adds Buttons to ButtonBoard
 		buttonBoard.add(rowsLabel);
 		buttonBoard.add(rowsField);
@@ -133,25 +135,46 @@ public class Simulation extends JFrame {
 		buttonBoard.add(speedButton);
 		buttonBoard.add(fCounter);
 		
-		//Adds borderlayout and boards to the JFrame
-		add(gridBoard, BorderLayout.WEST);
-		add(ruleBoard, BorderLayout.CENTER);
+		return buttonBoard;
+	}
+	// Create panel that displays rules.
+	// Extendible ruleset would overwrite this method.
+	private JPanel buildRulesBoard() {
+		JPanel rules = new JPanel();		
+
+		//Labels for the rules section
+		JLabel rules1 = new JLabel("--Any live cell with fewer than two live neighbours dies (referred to as underpopulation).");
+		JLabel rules2 = new JLabel("--Any live cell with more than three live neighbours dies (referred to as overpopulation).");
+		JLabel rules3 = new JLabel("--Any live cell with two or three live neighbours lives, unchanged, to the next generation.");
+		JLabel rules4 = new JLabel("--Any dead cell with exactly three live neighbours comes to life.");
+		JLabel rules5 = new JLabel("Rules for the Game Of Life");
+		JLabel rules6 = new JLabel("*************************************************************************************************");
 		
-	
-		//Close and Size functions for JFrame
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(1400, 800));
 		
-		//Timer is implemented for the ticker functionality, default delay of 1 second
-		timer = new Timer(1000, new ActionListener() 
-		{
-            @Override
-            public void actionPerformed(ActionEvent e) 
-            {
-            	step();
-            }
-        });
-	Grid.generate(gridBoard, 10, 10);
+		//Adds rules to ruleboard
+		rules.add(rules5);
+		rules.add(rules6);
+		rules.add(rules1);
+		rules.add(rules2);
+		rules.add(rules3);
+		rules.add(rules4);
+
+		return rules;
+	}
+	// Panel that holds rules and controls.
+	private JSplitPane buildControlBoard() {
+		// Create panel that displays the rules.
+		JPanel rulesBoard = buildRulesBoard();		
+		// Create panel to hold simulation control buttons.
+		JPanel buttonBoard = buildButtonBoard();
+
+		// Output panel that contains both.
+		JSplitPane controlBoard = new JSplitPane(SwingConstants.HORIZONTAL, rulesBoard, buttonBoard);
+
+		//Sets Dimensions on side grid and divider location on the splitpane
+		controlBoard.setDividerLocation(350);
+		
+		return controlBoard;
 	}
 	
 	/* Simulation Controls */
