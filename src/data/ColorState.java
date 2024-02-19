@@ -22,7 +22,12 @@ import java.awt.Color;
 public enum ColorState {
 	WHITE, 
 	BLACK,
-	RED;
+	RED,
+	GREEN,
+	BLUE,
+	ORANGE,
+	YELLOW,
+	CYAN;
 	
 	// This looks redundant, but if/when the ruleset is made extendible it'll be easier to maintain.
 	public static Color colorStateToRGB(ColorState state) {
@@ -31,6 +36,16 @@ public enum ColorState {
 			return Color.BLACK;
 		case RED:
 			return Color.RED;
+		case GREEN:
+			return Color.GREEN;
+		case BLUE:
+			return Color.BLUE;
+		case ORANGE:
+			return Color.ORANGE;
+		case YELLOW: 
+			return Color.YELLOW;
+		case CYAN:
+			return Color.CYAN;
 		case WHITE:
 		default:
 			return Color.WHITE;
@@ -38,7 +53,7 @@ public enum ColorState {
 	}
 
 	public static ColorState[] getAllColorStates () {
-		return new ColorState[] { BLACK, WHITE, RED };
+		return new ColorState[] { BLACK, WHITE, RED, GREEN, BLUE, ORANGE, YELLOW, CYAN };
 	}
 }
 
