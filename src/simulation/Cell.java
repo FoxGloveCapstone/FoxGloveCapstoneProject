@@ -35,7 +35,7 @@ public class Cell {
 
 	public Cell(JButton guiElement) {
 		this.guiElement = guiElement;
-		setColorState(STARTING_STATE);
+		setColorState(STARTING_STATE, true);
 	}
 	
 	public void calculateNextStep(Neighbors neighbors) {
@@ -94,8 +94,10 @@ public class Cell {
 	}
 	
 	/* Getter and Setter */
-	public void setColorState(ColorState state) {
-		initialState = state;
+	public void setColorState(ColorState state, boolean setInitialState) {
+		if(setInitialState) {
+			initialState = state;
+		}
 		currentState = state;
 		
 		// Set button color

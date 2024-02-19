@@ -268,8 +268,7 @@ public class Simulation extends JFrame {
 		return board;
 	}
 	
-	/* Simulation Controls Helpers */ 
-
+	/* Simulation Controls Helpers */
 	// Advance to next frame.
 	public void step() {
 		currentStep++;
@@ -288,6 +287,7 @@ public class Simulation extends JFrame {
 		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
 		tickDelay = 10;
 		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
+		Grid.setDrawingMode(true);
 	}
 	// Helper method to create a new grid.
 	private void generateMap(int rows, int columns) {
@@ -348,6 +348,7 @@ public class Simulation extends JFrame {
 			setSpeedDisplay();
 			timer.start();
 			System.out.println("Play");
+			Grid.setDrawingMode(false);
         }
 	}
 	// Stops the timer.

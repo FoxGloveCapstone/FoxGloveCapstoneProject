@@ -42,6 +42,7 @@ public class Grid {
 	public static int width;
 	public static int height;
 	private static ColorState currentDrawingColor = ColorState.BLACK;
+	private static boolean isInDrawingMode = true;
 	
 	public static void generate(JPanel gridPanel, int width, int height) {
 		Grid.width = width;
@@ -88,6 +89,9 @@ public class Grid {
 	// Set drawing color
 	public static void setDrawingColor(ColorState col) {
 		currentDrawingColor = col;
+	}
+	public static void setDrawingMode(boolean drawMode) {
+		isInDrawingMode = drawMode;
 	}
 	
 	public static void generateRandom(String seed, int width, int height) {
@@ -163,9 +167,9 @@ public class Grid {
 			
 			// Otherwise, use normal toggle mode
             if (cell.getColorState() == Grid.currentDrawingColor) 
-                cell.setColorState(ColorState.WHITE);
+                cell.setColorState(ColorState.WHITE, Grid.isInDrawingMode);
             else 
-                cell.setColorState(Grid.currentDrawingColor);
+                cell.setColorState(Grid.currentDrawingColor, Grid.isInDrawingMode);
 		}
 	}
 }
