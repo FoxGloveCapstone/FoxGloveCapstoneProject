@@ -25,7 +25,10 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
+import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -33,9 +36,11 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
+import data.ColorState;
 import rules.Rule;
 
 public class Simulation extends JFrame {
@@ -91,12 +96,12 @@ public class Simulation extends JFrame {
 		setSize(new Dimension(1400, 800));
 	}
 	// Create buttons that control simulation.
-	private JPanel buildButtonBoard() {
+	private JPanel _buildButtonBoard() {
 		JPanel buttonBoard = new JPanel(new FlowLayout());		
 
 		//Buttons and Textfields for operations
 		rowsField.setColumns(10);
-		columnsField.setColumns(10);
+		columnsField.setColumns(10); 
 		JButton mapGenerateButton = new JButton("Generate Map");
 		JButton playButton = new JButton("Start");
 		JButton pauseButton = new JButton("Pause");
@@ -134,7 +139,73 @@ public class Simulation extends JFrame {
 		buttonBoard.add(speedDisplay);
 		buttonBoard.add(speedButton);
 		buttonBoard.add(fCounter);
+
+		// Add rule selection elements to board 
+		JPanel colorSelector = buildColorSelector();
+		buttonBoard.add(colorSelector);
+
+		return buttonBoard;
+	}
+	// Alternative layout for button board using a grid.
+	private JPanel buildButtonBoard() {
+		JPanel buttonBoard = new JPanel(new GridLayout(4, 1, 1, 5));
+		JPanel simControls = new JPanel(new FlowLayout());		
+		JPanel speedControls = new JPanel(new FlowLayout());
+		JPanel drawControls = new JPanel(new FlowLayout());
+		// Wrapper panel for frame counter
+		JPanel fCounterDisplay = new JPanel();
+		fCounterDisplay.add(fCounter);
 		
+		// Add subpanels to main board
+		buttonBoard.add(simControls);
+		buttonBoard.add(speedControls);
+		buttonBoard.add(fCounterDisplay);
+		buttonBoard.add(drawControls);
+
+		// Elements for sim controls
+		JLabel rowsLabel = new JLabel ("Rows");
+		JLabel columnsLabel = new JLabel("Columns");
+		rowsField.setColumns(10);
+		columnsField.setColumns(10);
+		JButton mapGenerateButton = new JButton("Generate Map");
+		JButton playButton = new JButton("Start");
+		JButton pauseButton = new JButton("Pause");
+		JButton nextButton = new JButton("Next");
+		JButton clearButton = new JButton("Clear");
+		JButton resetButton = new JButton("Reset");
+		JButton slowButton = new JButton("<-");
+		JButton speedButton = new JButton("->");
+		
+		// Attach actionlisteners to sim controls
+		mapGenerateButton.addActionListener(new MapGenerate());
+		playButton.addActionListener(new Play());
+		pauseButton.addActionListener(new Pause());
+		nextButton.addActionListener(new Step());
+		slowButton.addActionListener(new DecreaseSpeed());
+		speedButton.addActionListener(new IncreaseSpeed());
+		clearButton.addActionListener(new Clear()); 
+		resetButton.addActionListener(new Reset());
+		
+		// Adds controls to parent board.
+		simControls.add(rowsLabel);
+		simControls.add(rowsField);
+		simControls.add(columnsLabel);
+		simControls.add(columnsField);
+		simControls.add(mapGenerateButton);
+		simControls.add(playButton);
+		simControls.add(pauseButton);
+		simControls.add(nextButton);
+		simControls.add(clearButton);
+		simControls.add(resetButton);
+
+		// Add speed controls to parent board.
+		speedControls.add(slowButton);
+		speedControls.add(speedDisplay);
+		speedControls.add(speedButton);
+		
+		// Add rule selection elements to board 
+		JPanel colorSelector = buildColorSelector();
+		drawControls.add(colorSelector);
 		return buttonBoard;
 	}
 	// Create panel that displays rules.
@@ -175,6 +246,26 @@ public class Simulation extends JFrame {
 		controlBoard.setDividerLocation(350);
 		
 		return controlBoard;
+	}
+	// Element used to select the current draw color. 
+	// Two color select mode is mostly for debugging.
+	// If it is replaced using extendible ruleset:
+	//	- Remove JToggleButton declaration.
+	//	- Rewrite JLabel label to use alt message.
+	//	- Use parameterless ColorSelector constructor.
+	//	- Remove extra board.add() calls.
+	private JPanel buildColorSelector() {
+		JPanel board = new JPanel();
+		JLabel label = new JLabel("Live cell color: ");
+		
+		// Create dropdown panel to select color to draw with.
+		JComboBox<ColorState> colorList = new JComboBox<>(ColorState.getAllColorStates());
+		colorList.addActionListener(new ColorSelector());
+		// Add elements to parent board
+		board.add(label);
+		board.add(colorList);
+		
+		return board;
 	}
 	
 	/* Simulation Controls Helpers */ 
@@ -301,7 +392,7 @@ public class Simulation extends JFrame {
 			}
 
 			setSpeedDisplay();
-			System.out.println("lower speed");
+			System.out.println("Increase Speed");
         }
 	}
 	
@@ -316,7 +407,20 @@ public class Simulation extends JFrame {
 			}
 
 			setSpeedDisplay();
-			System.out.println("Increase speed");
+			System.out.println("Decrease Speed");
         }
+	}
+
+	// Used to select which color to draw with.
+	public class ColorSelector implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			JComboBox<ColorState> element = (JComboBox<ColorState>)e.getSource();
+			ColorState col = (ColorState)element.getSelectedItem();
+			System.out.println("Drawing color is: " + col);
+			Grid.setDrawingColor(col);
+			
+			// Remove the if/when extendible rulesets are added.
+			Cell.setRuleSet(Rule.getDefaultRuleset(col));
+		}
 	}
 }

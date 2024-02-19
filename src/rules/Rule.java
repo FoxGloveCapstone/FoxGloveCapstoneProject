@@ -47,8 +47,12 @@ public class Rule {
 	
 	// Helper Method to generate default rules automatically.
 	public static Rule[] getDefaultRuleset() {
+		return Rule.getDefaultRuleset(ColorState.BLACK);
+	}
+
+	public static Rule[] getDefaultRuleset(ColorState liveState) {
 		Rule[] rules = new Rule[4];
-		final ColorState LIVE = ColorState.BLACK;
+		final ColorState LIVE = liveState;
 		final ColorState DEAD = ColorState.WHITE;
 
 		// Rule 1: Any live cell with fewer than two live neighbors dies (referred to as underpopulation). 

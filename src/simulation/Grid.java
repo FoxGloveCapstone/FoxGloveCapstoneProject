@@ -41,6 +41,7 @@ public class Grid {
 	// These are here temporarily, we can change it to a method or readonly
 	public static int width;
 	public static int height;
+	private static ColorState currentDrawingColor = ColorState.BLACK;
 	
 	public static void generate(JPanel gridPanel, int width, int height) {
 		Grid.width = width;
@@ -82,6 +83,11 @@ public class Grid {
 				cells[x][y].clearColorState();
 			}
 		}
+	}
+	
+	// Set drawing color
+	public static void setDrawingColor(ColorState col) {
+		currentDrawingColor = col;
 	}
 	
 	public static void generateRandom(String seed, int width, int height) {
@@ -152,14 +158,14 @@ public class Grid {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			// If ruleset extension is implemented and more colors are added, 
-			// we'd probably have a palette of colors to select from. (You'd click red, everything you select turns red).
-			// In this scenario, the Grid class would be responsible for knowing which color to set the Cell to
-			// and this code will get completely replaced.
-            if (cell.getColorState() == ColorState.BLACK) 
+			// If/when extendible rulesets are implemented, this will be the only necessary line.
+			//cell.setColorState(currentDrawingColor);
+			
+			// Otherwise, use normal toggle mode
+            if (cell.getColorState() == Grid.currentDrawingColor) 
                 cell.setColorState(ColorState.WHITE);
             else 
-                cell.setColorState(ColorState.BLACK);
-        }
+                cell.setColorState(Grid.currentDrawingColor);
+		}
 	}
 }
