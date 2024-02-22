@@ -33,6 +33,15 @@ public class Rule {
 		this.result = result;
 	}
 
+	// Used by RuleGUI to read conditions.
+	RuleCondition[] getConditions() {
+		return conditions;
+	}
+	// Used by RuleGUI to read result.
+	ColorState getResult() {
+		return result;
+	}
+
 	// The return value of this could be an Optional type, 
 	// which can either be empty or contain a specific value.	
 	// Its technically safer to use than null, but in the scope of this project its fine.
@@ -52,7 +61,7 @@ public class Rule {
 
 	public static Rule[] getDefaultRuleset(ColorState liveState) {
 		Rule[] rules = new Rule[4];
-		final ColorState LIVE = liveState;
+		ColorState LIVE = liveState;
 		final ColorState DEAD = ColorState.WHITE;
 
 		// Rule 1: Any live cell with fewer than two live neighbors dies (referred to as underpopulation). 

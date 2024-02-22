@@ -25,7 +25,7 @@ import java.util.Arrays;
 import javax.swing.JButton;
 
 public class Cell {
-	private static ArrayList<Rule> ruleset;	
+	private static RuleSet ruleset;	
 	// The value of cells when first instantiated.
 	private final ColorState STARTING_STATE = ColorState.WHITE;
 	// Initial state is starting state by default, but can be overwritten by the user.
@@ -41,7 +41,7 @@ public class Cell {
 	public void calculateNextStep(Neighbors neighbors) {
 		ColorState col;
 		
-		for(Rule rule: ruleset) {
+		for(Rule rule: RuleSet.asArray()) {
 			col = rule.check(neighbors, currentState);
 			if(col != null) {
 				nextState = col;
@@ -80,24 +80,6 @@ public class Cell {
 		updateGUI();
 	}
 
-	/* Ruleset methods */
-	public static void setRuleSet(Rule[] rules) {
-		ruleset = new ArrayList<>();
-		ruleset.addAll(Arrays.asList(rules));
-	}
-	
-	public static void addRule(Rule rule) {
-		ruleset.add(rule);
-	}
-	
-	public static void removeRule(Rule rule) {
-		ruleset.remove(rule);
-	}
-	
-	public static void removeRule(int index) {
-		ruleset.remove(index);
-	}
-	
 	/* Getter and Setter */
 	public void setColorState(ColorState state, boolean setInitialState) {
 		if(setInitialState) {

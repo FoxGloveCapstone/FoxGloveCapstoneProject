@@ -42,6 +42,9 @@ import javax.swing.Timer;
 
 import data.ColorState;
 import rules.Rule;
+import rules.RuleGUI;
+import rules.RuleSet;
+import rules.RulesListGUI;
 
 public class Simulation extends JFrame {
 	private final int DEFAULT_GRID_SIZE = 10;
@@ -64,15 +67,16 @@ public class Simulation extends JFrame {
 	//private JTextField centerXField = new JTextField("");
 	//private JTextField centerYField = new JTextField("");
 
+	private RulesListGUI rulesBoard;
+	
 	public static void main(String[] args) {
         Simulation window = new Simulation();
-		// TODO: Create main window GUI
         window.setVisible(true); // Open the window, making it visible on the screen.
 	}
 
 	public Simulation() {
 		super("Game of Life");
-		Cell.setRuleSet(Rule.getDefaultRuleset());
+		RuleSet.setRuleSet(Rule.getDefaultRuleset());
 		buildGUI();
 
 		//Timer is implemented for the ticker functionality, default delay of 1 second
@@ -247,9 +251,10 @@ public class Simulation extends JFrame {
 	// Create panel that displays rules.
 	// Extendible ruleset would overwrite this method.
 	private JPanel buildRulesBoard() {
-		JPanel rules = new JPanel();		
-
-		//Labels for the rules section
+		JPanel rules = new JPanel();
+		
+		return rules;
+		/* //Labels for the rules section
 		JLabel rules1 = new JLabel("--Any live cell with fewer than two live neighbours dies (referred to as underpopulation).");
 		JLabel rules2 = new JLabel("--Any live cell with more than three live neighbours dies (referred to as overpopulation).");
 		JLabel rules3 = new JLabel("--Any live cell with two or three live neighbours lives, unchanged, to the next generation.");
@@ -266,12 +271,22 @@ public class Simulation extends JFrame {
 		rules.add(rules3);
 		rules.add(rules4);
 
-		return rules;
+		return rules; */
 	}
+	private JPanel buildRulesList() {
+		JPanel output = new JPanel(new GridLayout(RuleSet.size(), 1));
+		
+		for(Rule rule: RuleSet.asArray()) {
+			output.add(new RuleGUI(rule));
+		}
+		return output;
+	}
+	
 	// Panel that holds rules and controls.
 	private JSplitPane buildControlBoard() {
 		// Create panel that displays the rules.
-		JPanel rulesBoard = buildRulesBoard();		
+		// JPanel rulesBoard = buildRulesBoard();		
+		rulesBoard = new RulesListGUI(RuleSet.asArray());
 		// Create panel to hold simulation control buttons.
 		JPanel buttonBoard = buildButtonBoard();
 
@@ -432,7 +447,6 @@ public class Simulation extends JFrame {
 			System.out.println("Increase Speed");
         }
 	}
-	
 	// Decreases ticker speed
 	public class DecreaseSpeed implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
@@ -457,7 +471,9 @@ public class Simulation extends JFrame {
 			Grid.setDrawingColor(col);
 			
 			// Remove the if/when extendible rulesets are added.
-			Cell.setRuleSet(Rule.getDefaultRuleset(col));
+			RuleSet.setRuleSet(Rule.getDefaultRuleset(col));
+			rulesBoard.refresh();
+			repaint();
 		}
 	}
 	

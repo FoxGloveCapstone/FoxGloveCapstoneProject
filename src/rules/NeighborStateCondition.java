@@ -52,4 +52,15 @@ class NeighborStateCondition extends RuleCondition {
 				return value != quantity;
 		}
 	}
+
+	/* Getters used by RuleGUI */
+	ColorState getColorState() {
+		return colorState;
+	}
+	int getQuantity() {
+		return quantity;
+	}
+	RelOp getOp() {
+		return op;
+	}
 }

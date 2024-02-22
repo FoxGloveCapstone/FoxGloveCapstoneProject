@@ -1,1 +1,6 @@
 /simulation/
+<<<<<<< HEAD
+=======
+/gui/
+/rules/
+>>>>>>> 0b8be97 (Added UI for extendible ruleset)

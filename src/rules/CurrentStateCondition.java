@@ -42,4 +42,15 @@ class CurrentStateCondition extends RuleCondition {
 			return this.requiredColorState != currentColorState;
 		return this.requiredColorState == currentColorState;
 	}
+
+	/* Getter Methods used by RuleGUI */
+	public RelOp getOp() {
+		if(op == RelOp.NE) {
+			return RelOp.NE;
+		}
+		return RelOp.EQ;
+	}
+	public ColorState getColorState() {
+		return requiredColorState;
+	}
 }

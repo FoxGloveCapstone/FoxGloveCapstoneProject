@@ -15,4 +15,25 @@ package data;
 
 // >, >=, <, <=, ==, !=
 // These are used by the rule conditions.
-public enum RelOp { GT, GE, LT, LE, EQ, NE } 
+public enum RelOp { 
+	GT, GE, LT, LE, EQ, NE; 
+
+	@Override
+	public String toString() {
+		switch(this) {
+			case GT: 
+				return ">";
+			case GE:
+				return ">=";
+			case LT:
+				return "<";
+			case LE:
+				return "<=";
+			case NE:
+				return "!=";
+			case EQ:
+			default:
+				return "==";
+		}
+	}
+} 
