@@ -25,7 +25,6 @@ import java.util.Arrays;
 import javax.swing.JButton;
 
 public class Cell {
-	private static RuleSet ruleset;	
 	// The value of cells when first instantiated.
 	private final ColorState STARTING_STATE = ColorState.WHITE;
 	// Initial state is starting state by default, but can be overwritten by the user.

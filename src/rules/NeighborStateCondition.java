@@ -18,7 +18,7 @@ package rules;
 
 import data.*;
 
-class NeighborStateCondition extends RuleCondition {
+public class NeighborStateCondition extends RuleCondition {
 	// The state of the cells to evaluate.
 	private ColorState colorState;
 	// The quantity to evaluate against.
@@ -54,13 +54,13 @@ class NeighborStateCondition extends RuleCondition {
 	}
 
 	/* Getters used by RuleGUI */
-	ColorState getColorState() {
+	public ColorState getColorState() {
 		return colorState;
 	}
-	int getQuantity() {
+	public int getQuantity() {
 		return quantity;
 	}
-	RelOp getOp() {
+	public RelOp getOp() {
 		return op;
 	}
 }

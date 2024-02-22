@@ -1,16 +1,4 @@
-package rules;
-
-import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JLabel;
-
-import data.*;
-
+package gui;
 
 /*UMGC CAPSTONE PROJECT
  * Title:Game of Life in Java By Team Fox Glove:
@@ -26,6 +14,22 @@ import data.*;
  *
  * Used to display a specific rule in the rules list.
  */
+
+import java.awt.GridLayout;
+import java.awt.event.ActionListener;
+
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JLabel;
+
+import data.*;
+import rules.CurrentStateCondition;
+import rules.NeighborStateCondition;
+import rules.Rule;
+import rules.RuleCondition;
+
 
 public class RuleGUI extends JPanel {
 	private JRadioButton selectButton;

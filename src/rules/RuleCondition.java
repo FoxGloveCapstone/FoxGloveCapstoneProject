@@ -18,7 +18,7 @@ package rules;
 
 import data.*;
 
-abstract class RuleCondition {
+public abstract class RuleCondition {
 	public abstract boolean check(Neighbors neighbors, ColorState currentColorState);
 }
 

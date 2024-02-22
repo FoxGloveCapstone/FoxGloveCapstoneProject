@@ -42,9 +42,9 @@ import javax.swing.Timer;
 
 import data.ColorState;
 import data.RuleSet;
+import gui.RuleGUI;
+import gui.RulesListGUI;
 import rules.Rule;
-import rules.RuleGUI;
-import rules.RulesListGUI;
 
 public class Simulation extends JFrame {
 	private final int DEFAULT_GRID_SIZE = 10;

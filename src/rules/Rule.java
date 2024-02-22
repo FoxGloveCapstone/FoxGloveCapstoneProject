@@ -34,11 +34,11 @@ public class Rule {
 	}
 
 	// Used by RuleGUI to read conditions.
-	RuleCondition[] getConditions() {
+	public RuleCondition[] getConditions() {
 		return conditions;
 	}
 	// Used by RuleGUI to read result.
-	ColorState getResult() {
+	public ColorState getResult() {
 		return result;
 	}
 

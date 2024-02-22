@@ -20,7 +20,7 @@ import data.ColorState;
 import data.Neighbors;
 import data.RelOp;
 
-class CurrentStateCondition extends RuleCondition {
+public class CurrentStateCondition extends RuleCondition {
 	private ColorState requiredColorState;
 	private RelOp op;
 

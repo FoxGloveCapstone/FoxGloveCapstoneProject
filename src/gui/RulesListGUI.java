@@ -1,4 +1,4 @@
-package rules;
+package gui;
 
 import java.awt.GridLayout;
 import java.awt.ScrollPane;
@@ -8,11 +8,13 @@ import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
 import data.RuleSet;
+import rules.Rule;
 import simulation.Cell;
 
 /*UMGC CAPSTONE PROJECT
@@ -48,14 +50,14 @@ public class RulesListGUI extends JPanel {
 		add(scrollPane);
 
 		buildRulesList(rules);
+
 		// Add editing buttons at bottom.
 		JPanel buttonsPanel = new JPanel();
-		add(buttonsPanel);
-
 		JButton moveUpButton = new JButton("Up");
 		JButton moveDownButton = new JButton("Down");
 		JButton newButton = new JButton("New");
 		JButton removeButton = new JButton("Remove");
+		add(buttonsPanel);
 
 		buttonsPanel.add(moveUpButton);
 		buttonsPanel.add(moveDownButton);
@@ -133,6 +135,8 @@ public class RulesListGUI extends JPanel {
 	public class NewRule implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			// TODO: Add dialog window.
+
+			JOptionPane dialog = new JOptionPane("Create new rule");
 			System.out.println("Added new rule");
 		}
 	}
