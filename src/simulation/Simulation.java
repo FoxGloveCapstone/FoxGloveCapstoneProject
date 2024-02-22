@@ -57,6 +57,12 @@ public class Simulation extends JFrame {
 	private JPanel gridBoard = new JPanel(new GridLayout(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE));
 	private JTextField rowsField = new JTextField("" + DEFAULT_GRID_SIZE);
 	private JTextField columnsField = new JTextField("" + DEFAULT_GRID_SIZE);
+	
+	
+	//private JTextField zoomXField = new JTextField("");
+	//private JTextField zoomYField = new JTextField("");
+	//private JTextField centerXField = new JTextField("");
+	//private JTextField centerYField = new JTextField("");
 
 	public static void main(String[] args) {
         Simulation window = new Simulation();
@@ -152,6 +158,8 @@ public class Simulation extends JFrame {
 		JPanel simControls = new JPanel(new FlowLayout());		
 		JPanel speedControls = new JPanel(new FlowLayout());
 		JPanel drawControls = new JPanel(new FlowLayout());
+		JPanel navControls = new JPanel(new FlowLayout());
+
 		// Wrapper panel for frame counter
 		JPanel fCounterDisplay = new JPanel();
 		fCounterDisplay.add(fCounter);
@@ -161,6 +169,7 @@ public class Simulation extends JFrame {
 		buttonBoard.add(speedControls);
 		buttonBoard.add(fCounterDisplay);
 		buttonBoard.add(drawControls);
+		buttonBoard.add(navControls);
 
 		// Elements for sim controls
 		JLabel rowsLabel = new JLabel ("Rows");
@@ -176,6 +185,16 @@ public class Simulation extends JFrame {
 		JButton slowButton = new JButton("<-");
 		JButton speedButton = new JButton("->");
 		
+		JButton zoomButton = new JButton("testZoom");
+		
+		JButton zoomInButton = new JButton("zoom in");
+		JButton zoomOutButton = new JButton("zoom out");
+		JButton panLeftButton = new JButton("pan left");
+		JButton panRightButton = new JButton("pan right");
+		JButton panUpButton = new JButton("pan up");
+		JButton panDownButton = new JButton("pan down");
+
+		
 		// Attach actionlisteners to sim controls
 		mapGenerateButton.addActionListener(new MapGenerate());
 		playButton.addActionListener(new Play());
@@ -185,6 +204,15 @@ public class Simulation extends JFrame {
 		speedButton.addActionListener(new IncreaseSpeed());
 		clearButton.addActionListener(new Clear()); 
 		resetButton.addActionListener(new Reset());
+		//zoomButton.addActionListener(new Zoom());
+		
+		zoomInButton.addActionListener(new Zoom(0,0,-2));
+		zoomOutButton.addActionListener(new Zoom(0,0,2));
+		panLeftButton.addActionListener(new Zoom(0,-2,0));
+		panRightButton.addActionListener(new Zoom(0,2,0));
+		panUpButton.addActionListener(new Zoom(-2,0,0));
+		panDownButton.addActionListener(new Zoom(2,0,0));
+
 		
 		// Adds controls to parent board.
 		simControls.add(rowsLabel);
@@ -202,6 +230,14 @@ public class Simulation extends JFrame {
 		speedControls.add(slowButton);
 		speedControls.add(speedDisplay);
 		speedControls.add(speedButton);
+		
+		//Navigation (zoom) controls		
+		navControls.add(panLeftButton);
+		navControls.add(panRightButton);
+		navControls.add(panUpButton);
+		navControls.add(panDownButton);
+		navControls.add(zoomInButton);
+		navControls.add(zoomOutButton);
 		
 		// Add rule selection elements to board 
 		JPanel colorSelector = buildColorSelector();
@@ -422,6 +458,40 @@ public class Simulation extends JFrame {
 			
 			// Remove the if/when extendible rulesets are added.
 			Cell.setRuleSet(Rule.getDefaultRuleset(col));
+		}
+	}
+	
+	//checks text fields to zoom into the board
+	public class Zoom implements ActionListener 
+	{
+
+		int xDelta;
+		
+		int yDelta;
+		
+		int zDelta;
+		
+		public Zoom(int horizontalMovement, int verticalMovement, int zoomChange)
+		{
+			xDelta = horizontalMovement;
+			
+			yDelta = verticalMovement;
+			
+			zDelta = zoomChange;
+		}
+		
+		public void actionPerformed(ActionEvent e) {
+			// Get user input from text fields.
+			
+
+			gridBoard.removeAll();
+				
+			Grid.newZoom(gridBoard, xDelta, yDelta, zDelta);
+			
+			setVisible(true);
+
+			// Print to console for debugging.
+			System.out.println("zoooom");
 		}
 	}
 }
