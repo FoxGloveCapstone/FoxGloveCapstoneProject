@@ -52,6 +52,11 @@ public class Cell {
 		nextState = currentState;
 	}
 	
+	public JButton getButton()
+	{
+		return guiElement;
+	}
+	
 	public void updateGUI() {
 		currentState = nextState;
 		
