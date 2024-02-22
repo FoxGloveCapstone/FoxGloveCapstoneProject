@@ -41,9 +41,9 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import data.ColorState;
+import data.RuleSet;
 import rules.Rule;
 import rules.RuleGUI;
-import rules.RuleSet;
 import rules.RulesListGUI;
 
 public class Simulation extends JFrame {
@@ -105,58 +105,25 @@ public class Simulation extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setSize(new Dimension(1400, 800));
 	}
-	// Create buttons that control simulation.
-	private JPanel _buildButtonBoard() {
-		JPanel buttonBoard = new JPanel(new FlowLayout());		
 
-		//Buttons and Textfields for operations
-		rowsField.setColumns(10);
-		columnsField.setColumns(10); 
-		JButton mapGenerateButton = new JButton("Generate Map");
-		JButton playButton = new JButton("Start");
-		JButton pauseButton = new JButton("Pause");
-		JButton nextButton = new JButton("Next");
-		JButton clearButton = new JButton("Clear");
-		JButton resetButton = new JButton("Reset");
-		JButton slowButton = new JButton("<-");
-		JButton speedButton = new JButton("->");
+	// Panel that holds rules and controls.
+	private JSplitPane buildControlBoard() {
+		// Create panel that displays the rules.
+		// JPanel rulesBoard = buildRulesBoard();		
+		rulesBoard = new RulesListGUI(RuleSet.asArray());
+		// Create panel to hold simulation control buttons.
+		JPanel buttonBoard = buildButtonBoard();
+
+		// Output panel that contains both.
+		JSplitPane controlBoard = new JSplitPane(SwingConstants.HORIZONTAL, rulesBoard, buttonBoard);
+
+		//Sets Dimensions on side grid and divider location on the splitpane
+		controlBoard.setDividerLocation(350);
 		
-		mapGenerateButton.addActionListener(new MapGenerate());
-		
-		playButton.addActionListener(new Play());
-		pauseButton.addActionListener(new Pause());
-		nextButton.addActionListener(new Step());
-		slowButton.addActionListener(new DecreaseSpeed());
-		speedButton.addActionListener(new IncreaseSpeed());
-		clearButton.addActionListener(new Clear()); 
-		resetButton.addActionListener(new Reset());
-
-		
-		JLabel rowsLabel = new JLabel ("Rows");
-		JLabel columnsLabel = new JLabel("Columns");
-		//adds Buttons to ButtonBoard
-		buttonBoard.add(rowsLabel);
-		buttonBoard.add(rowsField);
-		buttonBoard.add(columnsLabel);
-		buttonBoard.add(columnsField);
-		buttonBoard.add(mapGenerateButton);
-		buttonBoard.add(playButton);
-		buttonBoard.add(pauseButton);
-		buttonBoard.add(nextButton);
-		buttonBoard.add(clearButton);
-		buttonBoard.add(resetButton);
-		buttonBoard.add(slowButton);
-		buttonBoard.add(speedDisplay);
-		buttonBoard.add(speedButton);
-		buttonBoard.add(fCounter);
-
-		// Add rule selection elements to board 
-		JPanel colorSelector = buildColorSelector();
-		buttonBoard.add(colorSelector);
-
-		return buttonBoard;
+		return controlBoard;
 	}
-	// Alternative layout for button board using a grid.
+	
+	// Create buttons that control simulation.
 	private JPanel buildButtonBoard() {
 		JPanel buttonBoard = new JPanel(new GridLayout(4, 1, 1, 5));
 		JPanel simControls = new JPanel(new FlowLayout());		
@@ -248,56 +215,7 @@ public class Simulation extends JFrame {
 		drawControls.add(colorSelector);
 		return buttonBoard;
 	}
-	// Create panel that displays rules.
-	// Extendible ruleset would overwrite this method.
-	private JPanel buildRulesBoard() {
-		JPanel rules = new JPanel();
-		
-		return rules;
-		/* //Labels for the rules section
-		JLabel rules1 = new JLabel("--Any live cell with fewer than two live neighbours dies (referred to as underpopulation).");
-		JLabel rules2 = new JLabel("--Any live cell with more than three live neighbours dies (referred to as overpopulation).");
-		JLabel rules3 = new JLabel("--Any live cell with two or three live neighbours lives, unchanged, to the next generation.");
-		JLabel rules4 = new JLabel("--Any dead cell with exactly three live neighbours comes to life.");
-		JLabel rules5 = new JLabel("Rules for the Game Of Life");
-		JLabel rules6 = new JLabel("*************************************************************************************************");
-		
-		
-		//Adds rules to ruleboard
-		rules.add(rules5);
-		rules.add(rules6);
-		rules.add(rules1);
-		rules.add(rules2);
-		rules.add(rules3);
-		rules.add(rules4);
-
-		return rules; */
-	}
-	private JPanel buildRulesList() {
-		JPanel output = new JPanel(new GridLayout(RuleSet.size(), 1));
-		
-		for(Rule rule: RuleSet.asArray()) {
-			output.add(new RuleGUI(rule));
-		}
-		return output;
-	}
 	
-	// Panel that holds rules and controls.
-	private JSplitPane buildControlBoard() {
-		// Create panel that displays the rules.
-		// JPanel rulesBoard = buildRulesBoard();		
-		rulesBoard = new RulesListGUI(RuleSet.asArray());
-		// Create panel to hold simulation control buttons.
-		JPanel buttonBoard = buildButtonBoard();
-
-		// Output panel that contains both.
-		JSplitPane controlBoard = new JSplitPane(SwingConstants.HORIZONTAL, rulesBoard, buttonBoard);
-
-		//Sets Dimensions on side grid and divider location on the splitpane
-		controlBoard.setDividerLocation(350);
-		
-		return controlBoard;
-	}
 	// Element used to select the current draw color. 
 	// Two color select mode is mostly for debugging.
 	// If it is replaced using extendible ruleset:
@@ -320,6 +238,7 @@ public class Simulation extends JFrame {
 	}
 	
 	/* Simulation Controls Helpers */
+	
 	// Advance to next frame.
 	public void step() {
 		currentStep++;
@@ -480,11 +399,8 @@ public class Simulation extends JFrame {
 	//checks text fields to zoom into the board
 	public class Zoom implements ActionListener 
 	{
-
 		int xDelta;
-		
 		int yDelta;
-		
 		int zDelta;
 		
 		public Zoom(int horizontalMovement, int verticalMovement, int zoomChange)

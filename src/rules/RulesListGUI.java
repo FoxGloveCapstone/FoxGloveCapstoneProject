@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 
+import data.RuleSet;
 import simulation.Cell;
 
 /*UMGC CAPSTONE PROJECT
@@ -131,6 +132,8 @@ public class RulesListGUI extends JPanel {
 	// Append rule to list.
 	public class NewRule implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			// TODO: Add dialog window.
+			System.out.println("Added new rule");
 		}
 	}
 	// Delete selected rule.
@@ -145,6 +148,7 @@ public class RulesListGUI extends JPanel {
 			// Item must be deleted from RuleSet, ruleElements
 			removeRule(index);
 			scrollPane.setViewportView(rulesList);
+			System.out.println("Removed rule " + index);
 		}
 	}
 	public class MoveUpRule implements ActionListener {
@@ -157,6 +161,7 @@ public class RulesListGUI extends JPanel {
 			
 			moveRule(index, index - 1);
 			scrollPane.setViewportView(rulesList);
+			System.out.println("Moved rule " + index + " up");
 		}
 	}
 	public class MoveDownRule implements ActionListener {
@@ -169,6 +174,7 @@ public class RulesListGUI extends JPanel {
 			
 			moveRule(index, index + 1);
 			scrollPane.setViewportView(rulesList);
+			System.out.println("Moved rule " + index + " down");
 		}
 	}
 }

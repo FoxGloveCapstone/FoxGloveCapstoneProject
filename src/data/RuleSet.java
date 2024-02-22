@@ -1,7 +1,23 @@
-package rules;
+package data;
+/*UMGC CAPSTONE PROJECT
+ * Title:Game of Life in Java By Team Fox Glove:
+ *         Anthony Farias
+           Mitchell Howard
+           Patrick Kamdem
+           Hyrum Madson
+           Bensaiten Sanchez Flores 
+ * 
+ *CMSC 495 7380
+ *Professor Sanford
+ *February 12, 2024 
+ *
+ * Class containing a static reference to the Rules.
+ */
 
 import java.util.ArrayList;
 import java.util.Arrays;
+
+import rules.Rule;
 
 public class RuleSet {
 	private static ArrayList<Rule> ruleSet;
