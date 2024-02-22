@@ -44,9 +44,21 @@ public class Grid {
 	private static ColorState currentDrawingColor = ColorState.BLACK;
 	private static boolean isInDrawingMode = true;
 	
+	private static int zoomFactor = 5;
+		
+	private static int centerX = 5;
+	
+	private static int centerY = 5;
+	
 	public static void generate(JPanel gridPanel, int width, int height) {
 		Grid.width = width;
 		Grid.height = height;
+		
+		centerX = width/2;
+		
+		centerY = height/2;
+		
+		zoomFactor = height;
 
 		cells = new Cell[width][height];
 		gridPanel.setLayout(new GridLayout(width, height));
@@ -68,6 +80,35 @@ public class Grid {
 			}	
 		}
 	}
+	
+	//removes buttons and adds them back based on parameters
+	public static void newZoom(JPanel gridPanel, int xChange, int yChange, int zoomChange)
+	{	
+		System.out.println("test Zoom");
+		
+		zoomFactor += zoomChange;
+		
+		centerX += xChange;
+		
+		centerY += yChange;
+		
+		gridPanel.setLayout(new GridLayout(zoomFactor, zoomFactor));
+		
+		for (int x = 0; x < width; x++) {
+			for(int y = 0; y < height; y++) {
+				
+				if(x > (centerX - (zoomFactor/2)) && x < (centerX + (zoomFactor/2)) && y > (centerY - (zoomFactor/2)) && y < (centerY + (zoomFactor/2)) )
+				{
+					System.out.println("added" + x + y);
+
+				
+				// Adds the color manipulation to each cell so when you click it it changes color
+				gridPanel.add(cells[x][y].getButton());
+				}
+			}	
+		}
+	}
+	
 	// If user manually set state of cell, return to that state
 	// Else return to starting state
 	public static void reset() {
