@@ -229,7 +229,7 @@ public class Simulation extends JFrame {
 		
 		// Create dropdown panel to select color to draw with.
 		JComboBox<ColorState> colorList = new JComboBox<>(ColorState.getAllColorStates());
-		colorList.addActionListener(new ColorSelector());
+		colorList.addActionListener(new ColorSelector(colorList));
 		// Add elements to parent board
 		board.add(label);
 		board.add(colorList);
@@ -383,15 +383,16 @@ public class Simulation extends JFrame {
 
 	// Used to select which color to draw with.
 	public class ColorSelector implements ActionListener {
+		JComboBox<ColorState> colorSelector;
+		public ColorSelector(JComboBox<ColorState> selector) {
+			colorSelector = selector;
+		}
+		
 		public void actionPerformed(ActionEvent e) {
-			JComboBox<ColorState> element = (JComboBox<ColorState>)e.getSource();
-			ColorState col = (ColorState)element.getSelectedItem();
+			ColorState col = (ColorState)colorSelector.getSelectedItem();
 			System.out.println("Drawing color is: " + col);
 			Grid.setDrawingColor(col);
 			
-			// Remove the if/when extendible rulesets are added.
-			RuleSet.setRuleSet(Rule.getDefaultRuleset(col));
-			rulesBoard.refresh();
 			repaint();
 		}
 	}

@@ -73,9 +73,12 @@ public class RuleGUI extends JPanel {
 		add(new JLabel("" + result));
 	}
 
+	// Called by parent in order to add button to a ButtonGroup.
+	// This ensures only one rule is selected at a time.
 	public JRadioButton getSelectButton() {
 		return selectButton;
 	}
+	
 	public boolean isSelected() {
 		return selectButton.isSelected();
 	}

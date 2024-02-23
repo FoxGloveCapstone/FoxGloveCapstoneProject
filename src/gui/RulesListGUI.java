@@ -11,7 +11,8 @@ package gui;
  *Professor Sanford
  *February 12, 2024 
  *
- * Displays all rules currently active.
+ * Displays all rules that are currently active.
+ * Allows the user to move, add, and remove rules.
  */
 
 import java.awt.GridLayout;
@@ -20,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -42,11 +44,13 @@ public class RulesListGUI extends JPanel {
 	private ButtonGroup selectButtons;
 
 	public RulesListGUI(JFrame frame, Rule[] rules) {
-		setLayout(new GridLayout(2, 1));
+		setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
 		rulesList = new JPanel();
+		rulesList.setLayout(new BoxLayout(rulesList, BoxLayout.PAGE_AXIS));
 
 		// Add list of rules to scroll pane.
 		scrollPane = new JScrollPane(rulesList);
+		scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane);
 
 		buildRulesList(rules);
@@ -58,12 +62,14 @@ public class RulesListGUI extends JPanel {
 		JButton newButton = new JButton("New");
 		JButton removeButton = new JButton("Remove");
 		add(buttonsPanel);
-
+		
+		// Add editing buttons to their panel.
 		buttonsPanel.add(moveUpButton);
 		buttonsPanel.add(moveDownButton);
 		buttonsPanel.add(newButton);
 		buttonsPanel.add(removeButton);
 	
+		// Add action listeners to buttons.
 		moveUpButton.addActionListener(new MoveUpRule());
 		moveDownButton.addActionListener(new MoveDownRule());
 		newButton.addActionListener(new NewRule(frame));
@@ -79,7 +85,6 @@ public class RulesListGUI extends JPanel {
 	private void buildRulesList(Rule[] rules) {
 		ruleElements = new ArrayList<>();
 
-		rulesList.setLayout(new GridLayout(rules.length, 1));
 		selectButtons = new ButtonGroup();
 
 		RuleGUI element;
@@ -91,6 +96,7 @@ public class RulesListGUI extends JPanel {
 		}
 
 		scrollPane.setViewportView(rulesList);
+		repaint();
 	}
 
 	/*
@@ -111,13 +117,14 @@ public class RulesListGUI extends JPanel {
 		return -1;
 	}
 	
-	// Helper function to delete everything related to a rule.
+	// Helper method to delete everything related to a rule.
 	private void removeRule(int index) {
 		RuleSet.remove(index);
 		rulesList.remove(index);
 		ruleElements.remove(index);
 	}
 	
+	// Helper method to change the position of a rule.
 	private void moveRule(int oldIndex, int newIndex) {
 		RuleSet.moveRule(oldIndex, newIndex);
 		
@@ -140,7 +147,22 @@ public class RulesListGUI extends JPanel {
 		}
 
 		public void actionPerformed(ActionEvent e) {
+			// Open dialog window and extract Rule.
+			// This is a modal window, so program will wait for it to close before continuing.
 			RuleBuilderDialog dialog = new RuleBuilderDialog(dialogOwner);
+			Rule newRule = dialog.getRule();
+			
+			// User canceled operation.
+			if(newRule == null)
+				return;
+
+			// Add new rule to RuleSet.
+			RuleSet.add(newRule);
+
+			// Add new rule to gui.
+			refresh();
+
+			// Debug
 			System.out.println("Added new rule");
 		}
 	}
@@ -159,6 +181,7 @@ public class RulesListGUI extends JPanel {
 			System.out.println("Removed rule " + index);
 		}
 	}
+	// Swap selected rule and the rule above it.
 	public class MoveUpRule implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int index = getActiveButtonIndex();
@@ -172,11 +195,12 @@ public class RulesListGUI extends JPanel {
 			System.out.println("Moved rule " + index + " up");
 		}
 	}
+	// Swap selected rule and the rule below it.
 	public class MoveDownRule implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			int index = getActiveButtonIndex();
 			
-			// If no button is selected or last element is added
+			// If no button is selected or last element is selected.
 			if(index == -1 || index >= ruleElements.size() - 1) 
 				return;
 			
