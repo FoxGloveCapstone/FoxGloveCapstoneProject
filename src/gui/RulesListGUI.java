@@ -1,22 +1,4 @@
 package gui;
-
-import java.awt.GridLayout;
-import java.awt.ScrollPane;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
-import javax.swing.ButtonGroup;
-import javax.swing.JButton;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JRadioButton;
-import javax.swing.JScrollPane;
-
-import data.RuleSet;
-import rules.Rule;
-import simulation.Cell;
-
 /*UMGC CAPSTONE PROJECT
  * Title:Game of Life in Java By Team Fox Glove:
  *         Anthony Farias
@@ -32,6 +14,24 @@ import simulation.Cell;
  * Displays all rules currently active.
  */
 
+import java.awt.GridLayout;
+import java.awt.ScrollPane;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
+
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JRadioButton;
+import javax.swing.JScrollPane;
+
+import data.RuleSet;
+import rules.Rule;
+import simulation.Cell;
+
 public class RulesListGUI extends JPanel {
 	private JScrollPane scrollPane;
 	private JPanel rulesList;
@@ -41,7 +41,7 @@ public class RulesListGUI extends JPanel {
 	// This way, only one rule can be selected for editing at a time.
 	private ButtonGroup selectButtons;
 
-	public RulesListGUI(Rule[] rules) {
+	public RulesListGUI(JFrame frame, Rule[] rules) {
 		setLayout(new GridLayout(2, 1));
 		rulesList = new JPanel();
 
@@ -66,12 +66,12 @@ public class RulesListGUI extends JPanel {
 	
 		moveUpButton.addActionListener(new MoveUpRule());
 		moveDownButton.addActionListener(new MoveDownRule());
-		newButton.addActionListener(new NewRule());
+		newButton.addActionListener(new NewRule(frame));
 		removeButton.addActionListener(new RemoveRule());
 	}
 	
-	public RulesListGUI() {
-		new RulesListGUI(RuleSet.asArray());
+	public RulesListGUI(JFrame frame) {
+		new RulesListGUI(frame, RuleSet.asArray());
 	}
 	/* Creates GUI element 
 	 * Assumes rulesList is already initialized.
@@ -133,10 +133,14 @@ public class RulesListGUI extends JPanel {
 	// Open new rule dialog window.
 	// Append rule to list.
 	public class NewRule implements ActionListener {
-		public void actionPerformed(ActionEvent e) {
-			// TODO: Add dialog window.
+		JFrame dialogOwner;
 
-			JOptionPane dialog = new JOptionPane("Create new rule");
+		public NewRule(JFrame f) {
+			dialogOwner = f;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			RuleBuilderDialog dialog = new RuleBuilderDialog(dialogOwner);
 			System.out.println("Added new rule");
 		}
 	}

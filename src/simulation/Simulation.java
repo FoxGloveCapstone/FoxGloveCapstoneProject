@@ -110,7 +110,7 @@ public class Simulation extends JFrame {
 	private JSplitPane buildControlBoard() {
 		// Create panel that displays the rules.
 		// JPanel rulesBoard = buildRulesBoard();		
-		rulesBoard = new RulesListGUI(RuleSet.asArray());
+		rulesBoard = new RulesListGUI(this, RuleSet.asArray());
 		// Create panel to hold simulation control buttons.
 		JPanel buttonBoard = buildButtonBoard();
 
@@ -406,16 +406,12 @@ public class Simulation extends JFrame {
 		public Zoom(int horizontalMovement, int verticalMovement, int zoomChange)
 		{
 			xDelta = horizontalMovement;
-			
 			yDelta = verticalMovement;
-			
 			zDelta = zoomChange;
 		}
 		
 		public void actionPerformed(ActionEvent e) {
 			// Get user input from text fields.
-			
-
 			gridBoard.removeAll();
 				
 			Grid.newZoom(gridBoard, xDelta, yDelta, zDelta);

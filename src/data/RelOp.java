@@ -36,4 +36,8 @@ public enum RelOp {
 				return "==";
 		}
 	}
+
+	public static RelOp[] getAllRelOps() {
+		return new RelOp[] { EQ, NE, GT, GE, LT, LE };
+	}
 } 
