@@ -97,7 +97,7 @@ public class Grid {
 		for (int x = 0; x < width; x++) {
 			for(int y = 0; y < height; y++) {
 				
-				if(x > (centerX - (zoomFactor/2)) && x < (centerX + (zoomFactor/2)) && y > (centerY - (zoomFactor/2)) && y < (centerY + (zoomFactor/2)) )
+				if(x >= (centerX - (zoomFactor/2)) && x < (centerX + (zoomFactor/2)) && y >= (centerY - (zoomFactor/2)) && y < (centerY + (zoomFactor/2)) )
 				{
 					System.out.println("added" + x + y);
 
