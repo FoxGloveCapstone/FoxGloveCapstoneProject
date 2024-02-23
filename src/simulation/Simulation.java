@@ -225,7 +225,7 @@ public class Simulation extends JFrame {
 	//	- Remove extra board.add() calls.
 	private JPanel buildColorSelector() {
 		JPanel board = new JPanel();
-		JLabel label = new JLabel("Live cell color: ");
+		JLabel label = new JLabel("Drawing color: ");
 		
 		// Create dropdown panel to select color to draw with.
 		JComboBox<ColorState> colorList = new JComboBox<>(ColorState.getAllColorStates());

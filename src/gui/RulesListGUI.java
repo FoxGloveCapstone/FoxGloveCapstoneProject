@@ -21,6 +21,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
+import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -61,6 +62,7 @@ public class RulesListGUI extends JPanel {
 		JButton moveDownButton = new JButton("Down");
 		JButton newButton = new JButton("New");
 		JButton removeButton = new JButton("Remove");
+		JButton revertButton = new JButton("Revert to Default Ruleset");
 		add(buttonsPanel);
 		
 		// Add editing buttons to their panel.
@@ -68,12 +70,14 @@ public class RulesListGUI extends JPanel {
 		buttonsPanel.add(moveDownButton);
 		buttonsPanel.add(newButton);
 		buttonsPanel.add(removeButton);
+		buttonsPanel.add(revertButton);
 	
 		// Add action listeners to buttons.
 		moveUpButton.addActionListener(new MoveUpRule());
 		moveDownButton.addActionListener(new MoveDownRule());
 		newButton.addActionListener(new NewRule(frame));
 		removeButton.addActionListener(new RemoveRule());
+		revertButton.addActionListener(new RevertToDefaults());
 	}
 	
 	public RulesListGUI(JFrame frame) {
@@ -207,6 +211,13 @@ public class RulesListGUI extends JPanel {
 			moveRule(index, index + 1);
 			scrollPane.setViewportView(rulesList);
 			System.out.println("Moved rule " + index + " down");
+		}
+	}
+	// Reset ruleset to defaults.
+	public class RevertToDefaults implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			RuleSet.setRuleSet(Rule.getDefaultRuleset());
+			refresh();
 		}
 	}
 }
