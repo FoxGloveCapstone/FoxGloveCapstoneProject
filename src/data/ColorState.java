@@ -66,6 +66,74 @@ public enum ColorState {
 			return Color.WHITE;
 		}
 	}
+	
+	@Override
+	public String toString() {
+		switch(this) {
+		case BLACK: 
+			return "BLACK";
+		case RED:
+			return "RED";
+		case GREEN:
+			return "GREEN";
+		case BLUE:
+			return "BLUE";
+		case ORANGE:
+			return "ORANGE";
+		case YELLOW: 
+			return "YELLOW";
+		case MAGENTA:
+			return "MAGENTA";
+		case PINK:
+			return "PINK";
+		case DARKGRAY:
+			return "DARK_GRAY";
+		case GRAY:
+			return "GRAY";
+		case LIGHTGRAY:
+			return "LIGHT_GRAY";
+		case CYAN:
+			return "CYAN";
+		case WHITE:
+		default:
+			return "WHITE";
+		}
+	}
+	
+	public static ColorState ColorState(String color)
+	{
+		switch(color) {
+		case "BLACK": 
+			return ColorState.BLACK;
+		case "RED":
+			return ColorState.RED;
+		case "GREEN":
+			return ColorState.GREEN;
+		case "BLUE":
+			return ColorState.BLUE;
+		case "ORANGE":
+			return ColorState.ORANGE;
+		case "YELLOW": 
+			return ColorState.YELLOW;
+		case "MAGENTA":
+			return ColorState.MAGENTA;
+		case "PINK":
+			return ColorState.PINK;
+		case "DARKGRAY":
+			return ColorState.DARKGRAY;
+		case "GRAY":
+			return ColorState.GRAY;
+		case "LIGHTGRAY":
+			return ColorState.LIGHTGRAY;
+		case "CYAN":
+			return ColorState.CYAN;
+		case "WHITE":
+			return ColorState.WHITE;
+		default:
+			return null;
+		}
+	}
+
 
 	public static ColorState[] getAllColorStates () {
 		return new ColorState[] { BLACK, WHITE, RED, GREEN, BLUE, ORANGE, YELLOW, MAGENTA, DARKGRAY, GRAY, LIGHTGRAY, CYAN, PINK };
