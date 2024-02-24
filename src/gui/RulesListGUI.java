@@ -17,6 +17,9 @@ package gui;
 
 import java.awt.GridLayout;
 import java.awt.ScrollPane;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.StringSelection;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -30,8 +33,11 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 import data.RuleSet;
+import gui.RulesListGUI.generateRules;
+import gui.RulesListGUI.printRules;
 import rules.Rule;
 import simulation.Cell;
 
@@ -39,6 +45,8 @@ public class RulesListGUI extends JPanel {
 	private JScrollPane scrollPane;
 	private JPanel rulesList;
 	private ArrayList<RuleGUI> ruleElements;
+	static JTextField rulesField = new JTextField("Seed");
+
 
 	// Holds list of radio buttons connected to RuleGUI objects.
 	// This way, only one rule can be selected for editing at a time.
@@ -63,6 +71,10 @@ public class RulesListGUI extends JPanel {
 		JButton newButton = new JButton("New");
 		JButton removeButton = new JButton("Remove");
 		JButton revertButton = new JButton("Revert to Default Ruleset");
+		JButton printButton = new JButton("print");
+		JButton generateButton = new JButton("Generate");
+		rulesField.setColumns(10);
+
 		add(buttonsPanel);
 		
 		// Add editing buttons to their panel.
@@ -71,6 +83,9 @@ public class RulesListGUI extends JPanel {
 		buttonsPanel.add(newButton);
 		buttonsPanel.add(removeButton);
 		buttonsPanel.add(revertButton);
+		buttonsPanel.add(printButton);
+		buttonsPanel.add(rulesField);
+		buttonsPanel.add(generateButton);
 	
 		// Add action listeners to buttons.
 		moveUpButton.addActionListener(new MoveUpRule());
@@ -78,6 +93,8 @@ public class RulesListGUI extends JPanel {
 		newButton.addActionListener(new NewRule(frame));
 		removeButton.addActionListener(new RemoveRule());
 		revertButton.addActionListener(new RevertToDefaults());
+		printButton.addActionListener(new printRules());
+		generateButton.addActionListener(new generateRules());
 	}
 	
 	public RulesListGUI(JFrame frame) {
@@ -221,4 +238,53 @@ public class RulesListGUI extends JPanel {
 			refresh();
 		}
 	}
+	
+	public class printRules implements ActionListener {
+		public void actionPerformed(ActionEvent e) {
+			
+			String printString ="";
+			
+			for(Rule x: RuleSet.getRuleSet())
+			{
+				printString += (x.toString());
+			}
+						
+			StringSelection stringSelection = new StringSelection(printString);
+			
+			Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+
+			clipboard.setContents(stringSelection, null);
+			
+			printString += ("has been copied to clipboard");
+			
+			JOptionPane.showMessageDialog(null, printString, 
+					"Rules", JOptionPane.INFORMATION_MESSAGE);
+		}
+	}
+	
+	public class generateRules implements ActionListener {
+		public void actionPerformed(ActionEvent e) 
+		{
+			
+			String rulesString = rulesField.getText();
+						
+			String[] tokens = rulesString.split("EndRule");
+			
+			Rule[] newRules = new Rule[tokens.length];
+						
+			int i = 0;
+			
+			for(String x: tokens)
+			{
+				newRules[i] = new Rule(x);
+				i++;
+			}
+			
+			System.out.println("generated");
+			RuleSet.setRuleSet(newRules);
+			refresh();
+		}
+	
+	}
+
 }
