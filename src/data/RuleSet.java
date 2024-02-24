@@ -26,6 +26,11 @@ public class RuleSet {
 		ruleSet = new ArrayList<>();
 		ruleSet.addAll(Arrays.asList(rules));
 	}
+	
+	public static ArrayList<Rule> getRuleSet()
+	{
+		return ruleSet;
+	}
 
 	public static Rule[] asArray() {
 		Rule[] output = new Rule[ruleSet.size()];
