@@ -37,6 +37,26 @@ public enum RelOp {
 		}
 	}
 
+	public static RelOp RelOp(String op)
+	{
+		switch(op) {
+		case ">": 
+			return RelOp.GT;
+		case ">=": 
+			return RelOp.GE;
+		case "<": 
+			return RelOp.LT;
+		case "<=": 
+			return RelOp.LE;
+		case "!=": 
+			return RelOp.NE;
+		case "==": 
+			return RelOp.EQ;
+		default:
+			return null;
+		}
+	}
+	
 	public static RelOp[] getAllRelOps() {
 		return new RelOp[] { EQ, NE, GT, GE, LT, LE };
 	}
