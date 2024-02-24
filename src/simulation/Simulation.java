@@ -413,7 +413,6 @@ public class Simulation extends JFrame {
 		
 		public void actionPerformed(ActionEvent e) {
 			// Get user input from text fields.
-			gridBoard.removeAll();
 				
 			Grid.newZoom(gridBoard, xDelta, yDelta, zDelta);
 			
