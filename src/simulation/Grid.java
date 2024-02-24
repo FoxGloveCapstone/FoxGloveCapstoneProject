@@ -92,6 +92,29 @@ public class Grid {
 		
 		centerY += yChange;
 		
+		if(centerX - (zoomFactor/2) < 0 || centerY - (zoomFactor/2) < 0)
+		{	
+			zoomFactor -= zoomChange;
+			
+			centerX -= xChange;
+			
+			centerY -= yChange;
+			
+			return;
+		}
+		if(centerX + (zoomFactor/2) > width || centerY + (zoomFactor/2) > height)
+		{	
+			zoomFactor -= zoomChange;
+			
+			centerX -= xChange;
+			
+			centerY -= yChange;
+			
+			return;
+		}
+		
+		gridPanel.removeAll();
+		
 		gridPanel.setLayout(new GridLayout(zoomFactor, zoomFactor));
 		
 		for (int x = 0; x < width; x++) {
