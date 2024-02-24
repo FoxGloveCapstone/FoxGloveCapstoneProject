@@ -29,6 +29,13 @@ public class CurrentStateCondition extends RuleCondition {
 		this.op = RelOp.EQ;
 	}
 
+	public CurrentStateCondition(String constructString) 
+	{
+		requiredColorState = ColorState.ColorState(constructString);
+		
+		this.op = RelOp.EQ;
+	}
+	
 	public CurrentStateCondition(ColorState requiredColorState, RelOp op) {
 		// Technically, this value can only be EQ or NE.
 		// However, the check method only checks if op == NE. Any other value defaults to EQ.
@@ -54,5 +61,11 @@ public class CurrentStateCondition extends RuleCondition {
 	@Override
 	public ColorState getColorState() {
 		return requiredColorState;
+	}
+	
+	@Override
+	public String toString() 
+	{
+		return "CS:" + requiredColorState.toString();
 	}
 }
