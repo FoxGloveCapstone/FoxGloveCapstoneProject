@@ -31,6 +31,17 @@ public class NeighborStateCondition extends RuleCondition {
 		this.op = op;
 		this.quantity = quantity;
 	}
+	
+	public NeighborStateCondition(String constructString) 
+	{
+		String[] tokens = constructString.split("-");
+		
+		System.out.println(tokens.length + " sdfsdfsdf");
+		
+		this.colorState = ColorState.ColorState(tokens[0]);
+		this.op = RelOp.RelOp(tokens[1]);
+		this.quantity = Integer.parseInt(tokens[2]);
+	}
 
 	@Override
 	public boolean check(Neighbors neighbors, ColorState currentColorState) {
@@ -64,5 +75,11 @@ public class NeighborStateCondition extends RuleCondition {
 	@Override
 	public RelOp getOp() {
 		return op;
+	}
+	
+	@Override
+	public String toString() 
+	{
+		return "NS:" + colorState.toString() +"-"+op.toString() + "-"+ quantity;
 	}
 }
