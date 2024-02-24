@@ -27,6 +27,11 @@ public enum ColorState {
 	BLUE,
 	ORANGE,
 	YELLOW,
+	MAGENTA,
+	PINK,
+	DARKGRAY,
+	GRAY,
+	LIGHTGRAY,
 	CYAN;
 	
 	// This looks redundant, but if/when the ruleset is made extendible it'll be easier to maintain.
@@ -44,6 +49,16 @@ public enum ColorState {
 			return Color.ORANGE;
 		case YELLOW: 
 			return Color.YELLOW;
+		case MAGENTA:
+			return Color.MAGENTA;
+		case PINK:
+			return Color.PINK;
+		case DARKGRAY:
+			return Color.DARK_GRAY;
+		case GRAY:
+			return Color.GRAY;
+		case LIGHTGRAY:
+			return Color.LIGHT_GRAY;
 		case CYAN:
 			return Color.CYAN;
 		case WHITE:
@@ -53,7 +68,6 @@ public enum ColorState {
 	}
 
 	public static ColorState[] getAllColorStates () {
-		return new ColorState[] { BLACK, WHITE, RED, GREEN, BLUE, ORANGE, YELLOW, CYAN };
+		return new ColorState[] { BLACK, WHITE, RED, GREEN, BLUE, ORANGE, YELLOW, MAGENTA, DARKGRAY, GRAY, LIGHTGRAY, CYAN, PINK };
 	}
 }
-
