@@ -32,6 +32,36 @@ public class Rule {
 		this.conditions = new RuleCondition[] { condition };
 		this.result = result;
 	}
+	public Rule(String constructString)
+	{
+		String[] tokens = constructString.split(" "); 
+		
+		conditions = new RuleCondition[tokens.length - 1];
+		
+		int x = 0;
+		
+		for (String token: tokens)
+		{
+						
+			switch(token.substring(0,2))
+			{
+			case "CS": 
+				conditions[x]= new CurrentStateCondition(token.substring(3));
+				x+=1;
+				break;
+			case "NS":
+				conditions[x]= new NeighborStateCondition(token.substring(3));
+				x+=1;
+				break;
+			case "CR":
+				result = ColorState.ColorState(token.substring(3));
+				break;
+			default:
+				//error
+			}
+		}
+	}
+
 
 	// Used by RuleGUI to read conditions.
 	public RuleCondition[] getConditions() {
@@ -87,5 +117,21 @@ public class Rule {
 		rules[3] = new Rule(new NeighborStateCondition(LIVE, RelOp.EQ, 3), LIVE);
 		
 		return rules;
+	}
+	
+	public String toString() 
+	{		
+		String returnString = "";
+		
+		for (RuleCondition rule: conditions)
+		{			
+			returnString += (rule.toString()+" ");
+		}
+		
+		returnString += "CR:" + result.toString();
+		
+		returnString +=" EndRule";
+		
+		return returnString;
 	}
 }
