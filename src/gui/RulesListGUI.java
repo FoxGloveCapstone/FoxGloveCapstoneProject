@@ -155,6 +155,7 @@ public class RulesListGUI extends JPanel {
 			// This is a modal window, so program will wait for it to close before continuing.
 			RuleBuilderDialog dialog = new RuleBuilderDialog(dialogOwner);
 			Rule newRule = dialog.getRule();
+			dialog.dispose();
 			
 			// User canceled operation.
 			if(newRule == null)

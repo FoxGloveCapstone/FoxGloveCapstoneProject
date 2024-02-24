@@ -44,12 +44,14 @@ public class CurrentStateCondition extends RuleCondition {
 	}
 
 	/* Getter Methods used by RuleGUI */
+	@Override
 	public RelOp getOp() {
 		if(op == RelOp.NE) {
 			return RelOp.NE;
 		}
 		return RelOp.EQ;
 	}
+	@Override
 	public ColorState getColorState() {
 		return requiredColorState;
 	}

@@ -51,26 +51,58 @@ public class RuleGUI extends JPanel {
 			// E.g. If self == BLACK && BLACK == 2 --> BLACK 
 			// becomes: && If self == BLACK BLACK == 2 --> BLACK
 			JPanel panel = new JPanel();
-			panel.add(new JLabel("If"));
-			if(cond instanceof NeighborStateCondition) {
-				panel.add(new JLabel("" + ((NeighborStateCondition)cond).getColorState()));
-				panel.add(new JLabel("" + ((NeighborStateCondition)cond).getOp()));
-				panel.add(new JLabel("" + ((NeighborStateCondition)cond).getQuantity()));
-			} 
-			else {
-				panel.add(new JLabel("self"));
-				panel.add(new JLabel("" + ((CurrentStateCondition)cond).getOp()));
-				panel.add(new JLabel("" + ((CurrentStateCondition)cond).getColorState()));
-			}
+			panel.add(new JLabel(getConditionStatement(cond)));
 			add(panel);
 
-			// If no more conditions, this is overwritten to be -->
+			// If no more conditions, this is overwritten.
 			paddingPanel = new JLabel("&&");
 			add(paddingPanel);
 		}
-		paddingPanel.setText("-->");
+		paddingPanel.setText("--> it becomes " + result);
+	}
+	
+	// Get the plain english form of rule condition.
+	private String getConditionStatement(RuleCondition cond) {
+		// If a cell is/isnt COLOR 
+		if(cond instanceof CurrentStateCondition) {
+			return String.format("If a cell %s %s", 
+					cond.getOp() == RelOp.EQ ? "is" : "isn't", 
+					cond.getColorState());
+		}
+
+		// EQ: If a cell has INT COLOR neighbors
+		// NE: If a cell doesn't have INT COLOR neighbors
+		// GE: If a cell has INT or more COLOR neighbors
+		// GT: If a cell has more than INT COLOR neighbors
+		// LE: If a cell has INT or less COLOR neighbors
+		// LT: If a cell has less than INT COLOR neighbors
+		RelOp op = cond.getOp();
+		String neighborState = String.format("%s neighbors", cond.getColorState());
+		String quantity;
+
+		// Initialize value of quantity. 
+		// All values except NE start with "has".
+		if(op == RelOp.NE) 
+			quantity = "doesn't have ";
+		else 
+			quantity = "has ";
 		
-		add(new JLabel("" + result));
+		// Add text that precedes INT, where necessary.
+		if(op == RelOp.GT)
+			quantity += "more than ";
+		else if(op == RelOp.LT)
+			quantity += "less than ";
+
+		// Add INT to text.
+		// Notice, no trailing space.
+		quantity += ((NeighborStateCondition)cond).getQuantity();
+
+		// Add text following INT.
+		if(op == RelOp.GE) 
+			quantity += " or more";
+		else if(op == RelOp.LE)
+			quantity += " or less";
+		return String.format("If a cell %s %s", quantity, neighborState);
 	}
 
 	// Called by parent in order to add button to a ButtonGroup.

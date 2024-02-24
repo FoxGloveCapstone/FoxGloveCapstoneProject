@@ -125,7 +125,8 @@ public class Simulation extends JFrame {
 	
 	// Create buttons that control simulation.
 	private JPanel buildButtonBoard() {
-		JPanel buttonBoard = new JPanel(new GridLayout(4, 1, 1, 5));
+		JPanel buttonBoard = new JPanel();
+		buttonBoard.setLayout(new BoxLayout(buttonBoard, BoxLayout.PAGE_AXIS));
 		JPanel simControls = new JPanel(new FlowLayout());		
 		JPanel speedControls = new JPanel(new FlowLayout());
 		JPanel drawControls = new JPanel(new FlowLayout());

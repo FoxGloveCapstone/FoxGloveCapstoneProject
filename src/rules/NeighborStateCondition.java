@@ -54,12 +54,14 @@ public class NeighborStateCondition extends RuleCondition {
 	}
 
 	/* Getters used by RuleGUI */
+	@Override
 	public ColorState getColorState() {
 		return colorState;
 	}
 	public int getQuantity() {
 		return quantity;
 	}
+	@Override
 	public RelOp getOp() {
 		return op;
 	}

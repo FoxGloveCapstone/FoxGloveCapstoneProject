@@ -20,6 +20,8 @@ import data.*;
 
 public abstract class RuleCondition {
 	public abstract boolean check(Neighbors neighbors, ColorState currentColorState);
+	public abstract RelOp getOp();
+	public abstract ColorState getColorState();
 }
 
 
