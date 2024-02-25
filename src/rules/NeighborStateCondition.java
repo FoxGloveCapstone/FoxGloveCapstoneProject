@@ -35,9 +35,7 @@ public class NeighborStateCondition extends RuleCondition {
 	public NeighborStateCondition(String constructString) 
 	{
 		String[] tokens = constructString.split("-");
-		
-		System.out.println(tokens.length + " sdfsdfsdf");
-		
+				
 		this.colorState = ColorState.ColorState(tokens[0]);
 		this.op = RelOp.RelOp(tokens[1]);
 		this.quantity = Integer.parseInt(tokens[2]);
