@@ -293,6 +293,7 @@ public class Simulation extends JFrame {
 		gridBoard.removeAll();
 		// Grid.generate(gridBoard, rows, columns);
 		Grid.generateRandom(gridBoard, seed, rows, columns);
+		repaint();
 		setVisible(true);
 		
 		// Reset simulation parameters.
@@ -474,7 +475,7 @@ public class Simulation extends JFrame {
 			// Get user input from text fields.
 				
 			Grid.newZoom(gridBoard, xDelta, yDelta, zDelta);
-			
+			repaint();
 			setVisible(true);
 
 			// Print to console for debugging.
