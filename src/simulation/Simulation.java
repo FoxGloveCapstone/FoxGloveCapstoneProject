@@ -144,10 +144,10 @@ public class Simulation extends JFrame {
 		// Add subpanels to main board
 		buttonBoard.add(mapControls);
 		buttonBoard.add(simControls);
+		buttonBoard.add(navControls);
 		buttonBoard.add(speedControls);
 		buttonBoard.add(fCounterDisplay);
 		buttonBoard.add(drawControls);
-		buttonBoard.add(navControls);
 
 		// Elements for sim controls
 		JLabel rowsLabel = new JLabel ("Rows");
