@@ -52,9 +52,9 @@ public class Grid {
 	
 	private static int centerY = 5;
 	
-	public static void generate(JPanel gridPanel, int width, int height) {
-		Grid.width = width;
-		Grid.height = height;
+	public static void generate(JPanel gridPanel, int size) {
+		Grid.width = size;
+		Grid.height = size;
 
 		centerX = width/2;
 		centerY = height/2;
@@ -81,12 +81,12 @@ public class Grid {
 		}
 	}
 
-	public static void generateRandom(JPanel gridPanel, String seed, int width, int height) {
+	public static void generateRandom(JPanel gridPanel, String seed, int size) {
 		ColorState[] colors = RuleSet.colorStatesUsedInRules();			
 		Random rand = new Random(stringToLong(seed));
 
-		Grid.width = width;
-		Grid.height = height;
+		Grid.width = size;
+		Grid.height = size;
 
 		centerX = width/2;
 		centerY = height/2;

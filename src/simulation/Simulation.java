@@ -89,7 +89,7 @@ public class Simulation extends JFrame {
         });
 
 		// Create a grid to start
-		generateMap(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE);
+		generateMap(DEFAULT_GRID_SIZE);
 	}
 	
 	/* GUI Builder */
@@ -134,8 +134,7 @@ public class Simulation extends JFrame {
 		JPanel speedControls = new JPanel();
 		JPanel drawControls = new JPanel();
 		JPanel navControls = new JPanel();
-		JSpinner rowsField = new JSpinner(new SpinnerNumberModel(DEFAULT_GRID_SIZE, 1, MAX_GRID_SIZE, 1));
-		JSpinner columnsField = new JSpinner(new SpinnerNumberModel(DEFAULT_GRID_SIZE, 1, MAX_GRID_SIZE, 1));
+		JSpinner mapSizeField = new JSpinner(new SpinnerNumberModel(DEFAULT_GRID_SIZE, 1, MAX_GRID_SIZE, 1));
 
 		// Wrapper panel for frame counter
 		JPanel fCounterDisplay = new JPanel();
@@ -150,8 +149,7 @@ public class Simulation extends JFrame {
 		buttonBoard.add(drawControls);
 
 		// Elements for sim controls
-		JLabel rowsLabel = new JLabel ("Rows");
-		JLabel columnsLabel = new JLabel("Columns");
+		JLabel rowsLabel = new JLabel ("Map Size");
 		
 		JButton mapGenerateButton = new JButton("Generate Map");
 		JButton randMapGenerateButton = new JButton("Generate Random Map");
@@ -177,8 +175,8 @@ public class Simulation extends JFrame {
 
 		
 		// Attach actionlisteners to sim controls
-		mapGenerateButton.addActionListener(new MapGenerate(rowsField, columnsField));
-		randMapGenerateButton.addActionListener(new RandomMapGenerate(seedField, rowsField, columnsField));
+		mapGenerateButton.addActionListener(new MapGenerate(mapSizeField));
+		randMapGenerateButton.addActionListener(new RandomMapGenerate(seedField, mapSizeField));
 		playButton.addActionListener(new Play());
 		pauseButton.addActionListener(new Pause());
 		nextButton.addActionListener(new Step());
@@ -205,9 +203,7 @@ public class Simulation extends JFrame {
 
 		// Add map controls to parent.
 		mapControls.add(rowsLabel);
-		mapControls.add(rowsField);
-		mapControls.add(columnsLabel);
-		mapControls.add(columnsField);
+		mapControls.add(mapSizeField);
 		mapControls.add(mapGenerateButton);
 		mapControls.add(seedField);
 		mapControls.add(randMapGenerateButton);
@@ -275,11 +271,11 @@ public class Simulation extends JFrame {
 		Grid.setDrawingMode(true);
 	}
 	// Helper method to create a new grid.
-	private void generateMap(int rows, int columns) {
+	private void generateMap(int size) {
 		// Clear board and regenerate.
 		gridBoard.removeAll();
 		// Grid.generate(gridBoard, rows, columns);
-		Grid.generate(gridBoard, rows, columns);
+		Grid.generate(gridBoard, size);
 		repaint();
 		setVisible(true);
 		
@@ -289,11 +285,11 @@ public class Simulation extends JFrame {
 		// Create new cellmanager(s)
 		threads = new CellManager[] { new CellManager() };
 	}
-	private void generateMap(String seed, int rows, int columns) {
+	private void generateMap(String seed, int size) {
 		// Clear board and regenerate.
 		gridBoard.removeAll();
 		// Grid.generate(gridBoard, rows, columns);
-		Grid.generateRandom(gridBoard, seed, rows, columns);
+		Grid.generateRandom(gridBoard, seed, size);
 		repaint();
 		setVisible(true);
 		
@@ -324,20 +320,18 @@ public class Simulation extends JFrame {
 	// Parse user input for number of rows and columns.
 	// Then create new grid.
 	public class MapGenerate implements ActionListener {
-		JSpinner rowsField, columnsField;
-		public MapGenerate(JSpinner rowsField, JSpinner columnsField) {
-			this.rowsField = rowsField;
-			this.columnsField = columnsField;
+		JSpinner mapSizeField;
+		public MapGenerate(JSpinner mapSizeField) {
+			this.mapSizeField = mapSizeField;
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			// Get user input from text fields.
 			try {
 				// Parse input to int. 
-				int generateR = (int)rowsField.getValue();
-				int generateC = (int)columnsField.getValue();
+				int mapSize = (int)mapSizeField.getValue();
 
-				generateMap(generateR, generateC);
+				generateMap(mapSize);
 			}
 			catch(Exception s) {
 				JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
@@ -349,21 +343,18 @@ public class Simulation extends JFrame {
 	}
 	public class RandomMapGenerate implements ActionListener {
 		private JTextField seedField;
-		JSpinner rowsField, columnsField;
+		private JSpinner mapSizeField;
 
-		public RandomMapGenerate(JTextField seedField, JSpinner rowsField, JSpinner columnsField) {
+		public RandomMapGenerate(JTextField seedField, JSpinner mapSizeField) {
+			this.mapSizeField = mapSizeField;
 			this.seedField = seedField;
-			this.rowsField = rowsField;
-			this.columnsField = columnsField;
 		}
 
 		public void actionPerformed(ActionEvent e) {
 			try {
 				// Parse input to int. 
-				int generateR = (int)rowsField.getValue();
-				int generateC = (int)columnsField.getValue();
-				
-				generateMap(seedField.getText(), generateR, generateC);
+				int mapSize = (int)mapSizeField.getValue();
+				generateMap(seedField.getText(), mapSize); 
 			}
 			catch(Exception s) {
 				JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
