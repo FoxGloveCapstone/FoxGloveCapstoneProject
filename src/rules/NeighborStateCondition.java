@@ -77,6 +77,6 @@ public class NeighborStateCondition extends RuleCondition {
 	@Override
 	public String toString() 
 	{
-		return "NS:" + colorState.toString() +"-"+op.toString() + "-"+ quantity;
+		return "NS:" + colorState + "-" + op + "-" + quantity;
 	}
 }

@@ -30,8 +30,9 @@ public class CurrentStateCondition extends RuleCondition {
 	}
 
 	public CurrentStateCondition(String constructString) {
-		requiredColorState = ColorState.parseString(constructString);
-		this.op = RelOp.EQ;
+		String[] tokens = constructString.split("-");
+		requiredColorState = ColorState.parseString(tokens[0]);
+		op = RelOp.parseString(tokens[1]);
 	}
 	
 	public CurrentStateCondition(ColorState requiredColorState, RelOp op) {
@@ -62,8 +63,7 @@ public class CurrentStateCondition extends RuleCondition {
 	}
 	
 	@Override
-	public String toString() 
-	{
-		return "CS:" + requiredColorState.toString();
+	public String toString() {
+		return "CS:" + requiredColorState.toString() + "-" + op;
 	}
 }
