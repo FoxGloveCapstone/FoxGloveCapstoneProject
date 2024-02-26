@@ -1,5 +1,7 @@
 package rules;
 
+import java.util.ArrayList;
+
 /*UMGC CAPSTONE PROJECT
 * Title:Game of Life in Java By Team Fox Glove:
 *         Anthony Farias
@@ -32,8 +34,7 @@ public class Rule {
 		this.conditions = new RuleCondition[] { condition };
 		this.result = result;
 	}
-	public Rule(String constructString)
-	{
+	public Rule(String constructString) {
 		String[] tokens = constructString.split(" "); 
 		
 		conditions = new RuleCondition[tokens.length - 1];
@@ -62,6 +63,16 @@ public class Rule {
 		}
 	}
 
+	public ArrayList<ColorState> getRelatedColorStates() {
+		ArrayList<ColorState> colors = new ArrayList<>();
+		colors.add(result);
+
+		for(RuleCondition cond: conditions) {
+			colors.add(cond.getColorState());
+		}
+
+		return colors;
+	}
 
 	// Used by RuleGUI to read conditions.
 	public RuleCondition[] getConditions() {

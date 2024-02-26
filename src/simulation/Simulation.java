@@ -34,9 +34,11 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
 import javax.swing.JToggleButton;
+import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
@@ -47,8 +49,9 @@ import gui.RulesListGUI;
 import rules.Rule;
 
 public class Simulation extends JFrame {
-	private final int DEFAULT_GRID_SIZE = 10;
-
+	private final int DEFAULT_GRID_SIZE = 20;
+	private final int MAX_GRID_SIZE = 10000;
+	
 	private CellManager[] threads;
 	private int currentStep;
 	private int tickDelay = 10;
@@ -58,8 +61,6 @@ public class Simulation extends JFrame {
 	private JLabel fCounter = new JLabel("Frame Counter: ");
 	private JLabel speedDisplay = new JLabel("Ticks Per Second: 1");
 	private JPanel gridBoard = new JPanel(new GridLayout(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE));
-	private JTextField rowsField = new JTextField("" + DEFAULT_GRID_SIZE);
-	private JTextField columnsField = new JTextField("" + DEFAULT_GRID_SIZE);
 	
 	
 	//private JTextField zoomXField = new JTextField("");
@@ -127,16 +128,21 @@ public class Simulation extends JFrame {
 	private JPanel buildButtonBoard() {
 		JPanel buttonBoard = new JPanel();
 		buttonBoard.setLayout(new BoxLayout(buttonBoard, BoxLayout.PAGE_AXIS));
-		JPanel simControls = new JPanel(new FlowLayout());		
-		JPanel speedControls = new JPanel(new FlowLayout());
-		JPanel drawControls = new JPanel(new FlowLayout());
-		JPanel navControls = new JPanel(new FlowLayout());
+
+		JPanel mapControls = new JPanel();
+		JPanel simControls = new JPanel();
+		JPanel speedControls = new JPanel();
+		JPanel drawControls = new JPanel();
+		JPanel navControls = new JPanel();
+		JSpinner rowsField = new JSpinner(new SpinnerNumberModel(DEFAULT_GRID_SIZE, 1, MAX_GRID_SIZE, 1));
+		JSpinner columnsField = new JSpinner(new SpinnerNumberModel(DEFAULT_GRID_SIZE, 1, MAX_GRID_SIZE, 1));
 
 		// Wrapper panel for frame counter
 		JPanel fCounterDisplay = new JPanel();
 		fCounterDisplay.add(fCounter);
 		
 		// Add subpanels to main board
+		buttonBoard.add(mapControls);
 		buttonBoard.add(simControls);
 		buttonBoard.add(speedControls);
 		buttonBoard.add(fCounterDisplay);
@@ -146,9 +152,12 @@ public class Simulation extends JFrame {
 		// Elements for sim controls
 		JLabel rowsLabel = new JLabel ("Rows");
 		JLabel columnsLabel = new JLabel("Columns");
-		rowsField.setColumns(10);
-		columnsField.setColumns(10);
+		
 		JButton mapGenerateButton = new JButton("Generate Map");
+		JButton randMapGenerateButton = new JButton("Generate Random Map");
+		JTextField seedField = new JTextField("Seed");
+		seedField.setColumns(30);
+
 		JButton playButton = new JButton("Start");
 		JButton pauseButton = new JButton("Pause");
 		JButton nextButton = new JButton("Next");
@@ -168,7 +177,8 @@ public class Simulation extends JFrame {
 
 		
 		// Attach actionlisteners to sim controls
-		mapGenerateButton.addActionListener(new MapGenerate());
+		mapGenerateButton.addActionListener(new MapGenerate(rowsField, columnsField));
+		randMapGenerateButton.addActionListener(new RandomMapGenerate(seedField, rowsField, columnsField));
 		playButton.addActionListener(new Play());
 		pauseButton.addActionListener(new Pause());
 		nextButton.addActionListener(new Step());
@@ -187,17 +197,21 @@ public class Simulation extends JFrame {
 
 		
 		// Adds controls to parent board.
-		simControls.add(rowsLabel);
-		simControls.add(rowsField);
-		simControls.add(columnsLabel);
-		simControls.add(columnsField);
-		simControls.add(mapGenerateButton);
 		simControls.add(playButton);
 		simControls.add(pauseButton);
 		simControls.add(nextButton);
 		simControls.add(clearButton);
 		simControls.add(resetButton);
 
+		// Add map controls to parent.
+		mapControls.add(rowsLabel);
+		mapControls.add(rowsField);
+		mapControls.add(columnsLabel);
+		mapControls.add(columnsField);
+		mapControls.add(mapGenerateButton);
+		mapControls.add(seedField);
+		mapControls.add(randMapGenerateButton);
+		
 		// Add speed controls to parent board.
 		speedControls.add(slowButton);
 		speedControls.add(speedDisplay);
@@ -264,7 +278,21 @@ public class Simulation extends JFrame {
 	private void generateMap(int rows, int columns) {
 		// Clear board and regenerate.
 		gridBoard.removeAll();
+		// Grid.generate(gridBoard, rows, columns);
 		Grid.generate(gridBoard, rows, columns);
+		setVisible(true);
+		
+		// Reset simulation parameters.
+		clearGridBoard();
+
+		// Create new cellmanager(s)
+		threads = new CellManager[] { new CellManager() };
+	}
+	private void generateMap(String seed, int rows, int columns) {
+		// Clear board and regenerate.
+		gridBoard.removeAll();
+		// Grid.generate(gridBoard, rows, columns);
+		Grid.generateRandom(gridBoard, seed, rows, columns);
 		setVisible(true);
 		
 		// Reset simulation parameters.
@@ -294,14 +322,18 @@ public class Simulation extends JFrame {
 	// Parse user input for number of rows and columns.
 	// Then create new grid.
 	public class MapGenerate implements ActionListener {
+		JSpinner rowsField, columnsField;
+		public MapGenerate(JSpinner rowsField, JSpinner columnsField) {
+			this.rowsField = rowsField;
+			this.columnsField = columnsField;
+		}
+
 		public void actionPerformed(ActionEvent e) {
 			// Get user input from text fields.
-			String generateRows = rowsField.getText();
-			String generateColumns = columnsField.getText();
 			try {
 				// Parse input to int. 
-				int generateR = Integer.parseInt(generateRows);
-				int generateC = Integer.parseInt(generateColumns);
+				int generateR = (int)rowsField.getValue();
+				int generateC = (int)columnsField.getValue();
 
 				generateMap(generateR, generateC);
 			}
@@ -312,6 +344,32 @@ public class Simulation extends JFrame {
 			// Print to console for debugging.
 			System.out.println("MapGenerate");
         }
+	}
+	public class RandomMapGenerate implements ActionListener {
+		private JTextField seedField;
+		JSpinner rowsField, columnsField;
+
+		public RandomMapGenerate(JTextField seedField, JSpinner rowsField, JSpinner columnsField) {
+			this.seedField = seedField;
+			this.rowsField = rowsField;
+			this.columnsField = columnsField;
+		}
+
+		public void actionPerformed(ActionEvent e) {
+			try {
+				// Parse input to int. 
+				int generateR = (int)rowsField.getValue();
+				int generateC = (int)columnsField.getValue();
+				
+				generateMap(seedField.getText(), generateR, generateC);
+			}
+			catch(Exception s) {
+				JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
+						"ERROR", JOptionPane.ERROR_MESSAGE);
+			}
+			// Print to console for debugging.
+			System.out.println("Random MapGenerate");
+		}
 	}
 	// Starts the timer and modifies the speed display.
 	public class Play implements ActionListener {

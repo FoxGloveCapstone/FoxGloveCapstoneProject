@@ -36,8 +36,8 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 import data.RuleSet;
-import gui.RulesListGUI.generateRules;
-import gui.RulesListGUI.printRules;
+import gui.RulesListGUI.GenerateRules;
+import gui.RulesListGUI.PrintRules;
 import rules.Rule;
 import simulation.Cell;
 
@@ -66,16 +66,19 @@ public class RulesListGUI extends JPanel {
 
 		// Add editing buttons at bottom.
 		JPanel buttonsPanel = new JPanel();
-		JButton moveUpButton = new JButton("Up");
-		JButton moveDownButton = new JButton("Down");
-		JButton newButton = new JButton("New");
-		JButton removeButton = new JButton("Remove");
+		JButton moveUpButton = new JButton("Move Rule Up");
+		JButton moveDownButton = new JButton("Move Rule Down");
+		JButton newButton = new JButton("New Rule");
+		JButton removeButton = new JButton("Remove Rule");
 		JButton revertButton = new JButton("Revert to Default Ruleset");
-		JButton printButton = new JButton("print");
-		JButton generateButton = new JButton("Generate");
+
+		JPanel generateMapPanel = new JPanel();
+		JButton printButton = new JButton("Print Rule Seed");
+		JButton generateButton = new JButton("Generate Rule Seed");
 		rulesField.setColumns(10);
 
 		add(buttonsPanel);
+		add(generateMapPanel);
 		
 		// Add editing buttons to their panel.
 		buttonsPanel.add(moveUpButton);
@@ -83,9 +86,11 @@ public class RulesListGUI extends JPanel {
 		buttonsPanel.add(newButton);
 		buttonsPanel.add(removeButton);
 		buttonsPanel.add(revertButton);
-		buttonsPanel.add(printButton);
-		buttonsPanel.add(rulesField);
-		buttonsPanel.add(generateButton);
+
+		// Add rule seed panel.
+		generateMapPanel.add(printButton);
+		generateMapPanel.add(rulesField);
+		generateMapPanel.add(generateButton);
 	
 		// Add action listeners to buttons.
 		moveUpButton.addActionListener(new MoveUpRule());
@@ -93,8 +98,8 @@ public class RulesListGUI extends JPanel {
 		newButton.addActionListener(new NewRule(frame));
 		removeButton.addActionListener(new RemoveRule());
 		revertButton.addActionListener(new RevertToDefaults());
-		printButton.addActionListener(new printRules());
-		generateButton.addActionListener(new generateRules());
+		printButton.addActionListener(new PrintRules());
+		generateButton.addActionListener(new GenerateRules());
 	}
 	
 	public RulesListGUI(JFrame frame) {
@@ -239,10 +244,10 @@ public class RulesListGUI extends JPanel {
 		}
 	}
 	
-	public class printRules implements ActionListener {
+	public class PrintRules implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			
-			String printString ="";
+			String printString = "";
 			
 			for(Rule x: RuleSet.getRuleSet())
 			{
@@ -255,14 +260,14 @@ public class RulesListGUI extends JPanel {
 
 			clipboard.setContents(stringSelection, null);
 			
-			printString += ("has been copied to clipboard");
+			printString += (" has been copied to clipboard");
 			
 			JOptionPane.showMessageDialog(null, printString, 
 					"Rules", JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
 	
-	public class generateRules implements ActionListener {
+	public class GenerateRules implements ActionListener {
 		public void actionPerformed(ActionEvent e) 
 		{
 			

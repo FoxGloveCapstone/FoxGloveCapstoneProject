@@ -27,8 +27,7 @@ public class RuleSet {
 		ruleSet.addAll(Arrays.asList(rules));
 	}
 	
-	public static ArrayList<Rule> getRuleSet()
-	{
+	public static ArrayList<Rule> getRuleSet() {
 		return ruleSet;
 	}
 
@@ -61,5 +60,14 @@ public class RuleSet {
 	}
 	public static int size() {
 		return ruleSet.size();
+	}
+	public static ColorState[] colorStatesUsedInRules() {
+		ArrayList<ColorState> states = new ArrayList<>();
+
+		for(Rule rule: ruleSet) {
+			states.addAll(rule.getRelatedColorStates());
+		}
+		ColorState[] output = new ColorState[states.size()];
+		return states.toArray(output);
 	}
 }

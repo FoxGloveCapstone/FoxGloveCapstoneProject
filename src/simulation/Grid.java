@@ -18,6 +18,7 @@ package simulation;
 
 import data.ColorState;
 import data.Neighbors;
+import data.RuleSet;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -26,6 +27,7 @@ import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Random;
 
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -53,11 +55,9 @@ public class Grid {
 	public static void generate(JPanel gridPanel, int width, int height) {
 		Grid.width = width;
 		Grid.height = height;
-		
+
 		centerX = width/2;
-		
 		centerY = height/2;
-		
 		zoomFactor = height;
 
 		cells = new Cell[width][height];
@@ -80,10 +80,56 @@ public class Grid {
 			}	
 		}
 	}
+
+	public static void generateRandom(JPanel gridPanel, String seed, int width, int height) {
+		ColorState[] colors = RuleSet.colorStatesUsedInRules();			
+		Random rand = new Random(stringToLong(seed));
+
+		Grid.width = width;
+		Grid.height = height;
+
+		centerX = width/2;
+		centerY = height/2;
+		zoomFactor = height;
+
+		cells = new Cell[width][height];
+		gridPanel.setLayout(new GridLayout(width, height));
+
+        for (int x = 0; x < width; x++) {
+			for(int y = 0; y < height; y++) {
+				// String arguments passed here will label the buttons, 
+				// we probably don't want the buttons labeled.
+				JButton button = new JButton();
+				Cell cell = new Cell(button);
+				cells[x][y] = cell;
+
+				// Randomly set grid
+				cell.setColorState(colors[Math.abs(rand.nextInt()) % colors.length], true);
+				
+				// Sets the buttons size, its important to do this so that the buttons are square shaped
+				button.setPreferredSize(new Dimension(30, 30));
+				
+				// Adds the color manipulation to each cell so when you click it it changes color
+				button.addActionListener(new ColorSwitch(button, cell));
+				gridPanel.add(button);
+			}	
+		}
+	}
 	
+	private static long stringToLong(String seed) {
+		long output = 0;
+
+		int index = 0;
+		for(char chara: seed.toCharArray()) {
+			long num = chara << 8 * (index++ % 8);
+			output += num;
+		}
+
+		System.out.println("Long seed: " + output);
+		return output;
+	}
 	//removes buttons and adds them back based on parameters
-	public static void newZoom(JPanel gridPanel, int xChange, int yChange, int zoomChange)
-	{	
+	public static void newZoom(JPanel gridPanel, int xChange, int yChange, int zoomChange) {	
 		System.out.println("test Zoom");
 		
 		zoomFactor += zoomChange;
@@ -156,10 +202,6 @@ public class Grid {
 	}
 	public static void setDrawingMode(boolean drawMode) {
 		isInDrawingMode = drawMode;
-	}
-	
-	public static void generateRandom(String seed, int width, int height) {
-		
 	}
 	
 	public static Neighbors getNeighborsOf(int x, int y) {
