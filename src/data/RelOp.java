@@ -37,8 +37,7 @@ public enum RelOp {
 		}
 	}
 
-	public static RelOp RelOp(String op)
-	{
+	public static RelOp parseString(String op) {
 		switch(op) {
 		case ">": 
 			return RelOp.GT;

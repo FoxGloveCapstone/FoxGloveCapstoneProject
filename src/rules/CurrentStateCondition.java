@@ -29,10 +29,8 @@ public class CurrentStateCondition extends RuleCondition {
 		this.op = RelOp.EQ;
 	}
 
-	public CurrentStateCondition(String constructString) 
-	{
-		requiredColorState = ColorState.ColorState(constructString);
-		
+	public CurrentStateCondition(String constructString) {
+		requiredColorState = ColorState.parseString(constructString);
 		this.op = RelOp.EQ;
 	}
 	

@@ -24,7 +24,7 @@ public class CellManager {
 
 	public CellManager() {
 		rowOffset = 0;
-		this.rowCount = Grid.height;
+		this.rowCount = Grid.getSize();
 	}
 	
 	public CellManager(int rowCount, int rowOffset) {
@@ -35,7 +35,7 @@ public class CellManager {
 	// Calculation pass.
 	// Tell cells to calculate their state in the next frame.
 	public void calculateFrame() {
-		for(int x = 0; x < Grid.width; x++) {
+		for(int x = 0; x < Grid.getSize(); x++) {
 			for(int y = rowOffset; y < rowCount; y++) {
 				Cell currentCell = Grid.getCellAt(x, y);
 				Neighbors neighbors = Grid.getNeighborsOf(x, y);
@@ -47,7 +47,7 @@ public class CellManager {
 	// Update pass.
 	// Tell cells to change colors.
 	public void updateGUI() {
-		for(int x = 0; x < Grid.width; x++) {
+		for(int x = 0; x < Grid.getSize(); x++) {
 			for(int y = rowOffset; y < rowCount; y++) {
 				Cell currentCell = Grid.getCellAt(x, y);
 				currentCell.updateGUI();

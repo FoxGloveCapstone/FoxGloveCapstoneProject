@@ -1,6 +1,7 @@
 package rules;
 
-import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.HashSet;
 
 /*UMGC CAPSTONE PROJECT
 * Title:Game of Life in Java By Team Fox Glove:
@@ -55,32 +56,12 @@ public class Rule {
 				x+=1;
 				break;
 			case "CR":
-				result = ColorState.ColorState(token.substring(3));
+				result = ColorState.parseString(token.substring(3));
 				break;
 			default:
 				//error
 			}
 		}
-	}
-
-	public ArrayList<ColorState> getRelatedColorStates() {
-		ArrayList<ColorState> colors = new ArrayList<>();
-		colors.add(result);
-
-		for(RuleCondition cond: conditions) {
-			colors.add(cond.getColorState());
-		}
-
-		return colors;
-	}
-
-	// Used by RuleGUI to read conditions.
-	public RuleCondition[] getConditions() {
-		return conditions;
-	}
-	// Used by RuleGUI to read result.
-	public ColorState getResult() {
-		return result;
 	}
 
 	// The return value of this could be an Optional type, 
@@ -130,8 +111,8 @@ public class Rule {
 		return rules;
 	}
 	
-	public String toString() 
-	{		
+	@Override
+	public String toString() {		
 		String returnString = "";
 		
 		for (RuleCondition rule: conditions)
@@ -144,5 +125,26 @@ public class Rule {
 		returnString +=" EndRule";
 		
 		return returnString;
+	}
+
+	// Get color states mentioned in conditions and result.
+	public HashSet<ColorState> getRelatedColorStates() {
+		HashSet<ColorState> colors = new HashSet<>();
+		colors.add(result);
+
+		for(RuleCondition cond: conditions) {
+			colors.add(cond.getColorState());
+		}
+
+		return colors;
+	}
+
+	// Used by RuleGUI to read conditions.
+	public RuleCondition[] getConditions() {
+		return conditions;
+	}
+	// Used by RuleGUI to read result.
+	public ColorState getResult() {
+		return result;
 	}
 }

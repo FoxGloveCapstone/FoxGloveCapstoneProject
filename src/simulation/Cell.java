@@ -19,6 +19,7 @@ import rules.*;
 import data.*;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -31,15 +32,20 @@ public class Cell {
 	private ColorState currentState, nextState, initialState;
 	private JButton guiElement;
 
-
 	public Cell(JButton guiElement) {
 		this.guiElement = guiElement;
+				
+		// Sets the buttons size, its important to do this so that the buttons are square shaped
+		guiElement.setPreferredSize(new Dimension(30, 30));
+				
+		// Set initial & current state.
 		setColorState(STARTING_STATE, true);
 	}
 	
 	public void calculateNextStep(Neighbors neighbors) {
 		ColorState col;
-		
+
+		// Iterate over rules until one matches.
 		for(Rule rule: RuleSet.asArray()) {
 			col = rule.check(neighbors, currentState);
 			if(col != null) {
@@ -47,13 +53,8 @@ public class Cell {
 				return;
 			}
 		}
-		
+		// If no rules match, keep current state.
 		nextState = currentState;
-	}
-	
-	public JButton getButton()
-	{
-		return guiElement;
 	}
 	
 	public void updateGUI() {
@@ -79,7 +80,7 @@ public class Cell {
 		updateGUI();
 	}
 
-	/* Getter and Setter */
+	/* Getters and Setters */
 	public void setColorState(ColorState state, boolean setInitialState) {
 		if(setInitialState) {
 			initialState = state;
@@ -93,5 +94,9 @@ public class Cell {
 	
 	public ColorState getColorState() {
 		return currentState;
+	}
+	
+	public JButton getButton() {
+		return guiElement;
 	}
 }

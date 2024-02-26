@@ -32,12 +32,11 @@ public class NeighborStateCondition extends RuleCondition {
 		this.quantity = quantity;
 	}
 	
-	public NeighborStateCondition(String constructString) 
-	{
+	public NeighborStateCondition(String constructString) {
 		String[] tokens = constructString.split("-");
 				
-		this.colorState = ColorState.ColorState(tokens[0]);
-		this.op = RelOp.RelOp(tokens[1]);
+		this.colorState = ColorState.parseString(tokens[0]);
+		this.op = RelOp.parseString(tokens[1]);
 		this.quantity = Integer.parseInt(tokens[2]);
 	}
 

@@ -43,13 +43,14 @@ import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import data.ColorState;
-import data.RuleSet;
 import gui.RuleGUI;
 import gui.RulesListGUI;
 import rules.Rule;
+import rules.RuleSet;
 
 public class Simulation extends JFrame {
 	private final int DEFAULT_GRID_SIZE = 20;
+	private final int MIN_GRID_SIZE = 10;
 	private final int MAX_GRID_SIZE = 10000;
 	
 	private CellManager[] threads;
@@ -58,21 +59,14 @@ public class Simulation extends JFrame {
 	private Timer timer;
 	
 	//Some aspect of the UI have to be declared here to be accessible 
-	private JLabel fCounter = new JLabel("Frame Counter: ");
+	private JLabel frameCounter = new JLabel("Frame Counter: ");
 	private JLabel speedDisplay = new JLabel("Ticks Per Second: 1");
-	private JPanel gridBoard = new JPanel(new GridLayout(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE));
-	
-	
-	//private JTextField zoomXField = new JTextField("");
-	//private JTextField zoomYField = new JTextField("");
-	//private JTextField centerXField = new JTextField("");
-	//private JTextField centerYField = new JTextField("");
-
-	private RulesListGUI rulesBoard;
+	private JPanel gridPanel = new JPanel(new GridLayout(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE));
+	private RulesListGUI rulesPanel;
 	
 	public static void main(String[] args) {
         Simulation window = new Simulation();
-        window.setVisible(true); // Open the window, making it visible on the screen.
+        window.setVisible(true); 
 	}
 
 	public Simulation() {
@@ -92,36 +86,27 @@ public class Simulation extends JFrame {
 		generateMap(DEFAULT_GRID_SIZE);
 	}
 	
-	/* GUI Builder */
+	/* GUI Builder Methods */
+
 	// Initialize instance-level GUI elements and create panels.
 	private void buildGUI() {
-		JSplitPane controlBoard = buildControlBoard();
-
-		//Adds borderlayout and boards to the JFrame
-		add(gridBoard, BorderLayout.WEST);
-		add(controlBoard, BorderLayout.CENTER);
-	
-		gridBoard.setPreferredSize(new Dimension(800,900));
-		//Close and Size functions for JFrame
-		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setSize(new Dimension(1400, 800));
-	}
-
-	// Panel that holds rules and controls.
-	private JSplitPane buildControlBoard() {
-		// Create panel that displays the rules.
-		// JPanel rulesBoard = buildRulesBoard();		
-		rulesBoard = new RulesListGUI(this, RuleSet.asArray());
-		// Create panel to hold simulation control buttons.
-		JPanel buttonBoard = buildButtonBoard();
-
-		// Output panel that contains both.
-		JSplitPane controlBoard = new JSplitPane(SwingConstants.HORIZONTAL, rulesBoard, buttonBoard);
+		// Split pane with rules on top and controls on bottom.
+		JSplitPane controlBoard = new JSplitPane(
+				SwingConstants.HORIZONTAL, 
+				new RulesListGUI(this, RuleSet.asArray()),
+				buildButtonBoard());
 
 		//Sets Dimensions on side grid and divider location on the splitpane
 		controlBoard.setDividerLocation(350);
-		
-		return controlBoard;
+
+		//Adds borderlayout and boards to the JFrame
+		add(gridPanel, BorderLayout.WEST);
+		add(controlBoard, BorderLayout.CENTER);
+	
+		gridPanel.setPreferredSize(new Dimension(800,900));
+		//Close and Size functions for JFrame
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(new Dimension(1400, 800));
 	}
 	
 	// Create buttons that control simulation.
@@ -129,16 +114,16 @@ public class Simulation extends JFrame {
 		JPanel buttonBoard = new JPanel();
 		buttonBoard.setLayout(new BoxLayout(buttonBoard, BoxLayout.PAGE_AXIS));
 
+		// Subpanels which hold 
 		JPanel mapControls = new JPanel();
 		JPanel simControls = new JPanel();
 		JPanel speedControls = new JPanel();
 		JPanel drawControls = new JPanel();
 		JPanel navControls = new JPanel();
-		JSpinner mapSizeField = new JSpinner(new SpinnerNumberModel(DEFAULT_GRID_SIZE, 1, MAX_GRID_SIZE, 1));
 
 		// Wrapper panel for frame counter
 		JPanel fCounterDisplay = new JPanel();
-		fCounterDisplay.add(fCounter);
+		fCounterDisplay.add(frameCounter);
 		
 		// Add subpanels to main board
 		buttonBoard.add(mapControls);
@@ -150,6 +135,9 @@ public class Simulation extends JFrame {
 
 		// Elements for sim controls
 		JLabel rowsLabel = new JLabel ("Map Size");
+		JSpinner mapSizeField = new JSpinner(
+				new SpinnerNumberModel(DEFAULT_GRID_SIZE, MIN_GRID_SIZE, MAX_GRID_SIZE, 1));
+
 		
 		JButton mapGenerateButton = new JButton("Generate Map");
 		JButton randMapGenerateButton = new JButton("Generate Random Map");
@@ -166,32 +154,32 @@ public class Simulation extends JFrame {
 		
 		JButton zoomButton = new JButton("testZoom");
 		
-		JButton zoomInButton = new JButton("zoom in");
-		JButton zoomOutButton = new JButton("zoom out");
-		JButton panLeftButton = new JButton("pan left");
-		JButton panRightButton = new JButton("pan right");
-		JButton panUpButton = new JButton("pan up");
-		JButton panDownButton = new JButton("pan down");
+		JButton zoomInButton = new JButton("Zoom In");
+		JButton zoomOutButton = new JButton("Zoom Out");
+		JButton panLeftButton = new JButton("Pan Left");
+		JButton panRightButton = new JButton("Pan Right");
+		JButton panUpButton = new JButton("Pan Up");
+		JButton panDownButton = new JButton("Pan Down");
 
 		
 		// Attach actionlisteners to sim controls
 		mapGenerateButton.addActionListener(new MapGenerate(mapSizeField));
 		randMapGenerateButton.addActionListener(new RandomMapGenerate(seedField, mapSizeField));
-		playButton.addActionListener(new Play());
-		pauseButton.addActionListener(new Pause());
-		nextButton.addActionListener(new Step());
-		slowButton.addActionListener(new DecreaseSpeed());
-		speedButton.addActionListener(new IncreaseSpeed());
-		clearButton.addActionListener(new Clear()); 
-		resetButton.addActionListener(new Reset());
+		playButton.addActionListener(new StartTimer());
+		pauseButton.addActionListener(new PauseTimer());
+		nextButton.addActionListener(new StepTimer());
+		slowButton.addActionListener(new DecreaseTimerSpeed());
+		speedButton.addActionListener(new IncreaseTimerSpeed());
+		clearButton.addActionListener(new ClearGrid()); 
+		resetButton.addActionListener(new ResetGrid());
 		//zoomButton.addActionListener(new Zoom());
 		
-		zoomInButton.addActionListener(new Zoom(0,0,-2));
-		zoomOutButton.addActionListener(new Zoom(0,0,2));
-		panLeftButton.addActionListener(new Zoom(0,-2,0));
-		panRightButton.addActionListener(new Zoom(0,2,0));
-		panUpButton.addActionListener(new Zoom(-2,0,0));
-		panDownButton.addActionListener(new Zoom(2,0,0));
+		zoomInButton.addActionListener(new MoveViewport(0,0,-2));
+		zoomOutButton.addActionListener(new MoveViewport(0,0,2));
+		panLeftButton.addActionListener(new MoveViewport(0,-2,0));
+		panRightButton.addActionListener(new MoveViewport(0,2,0));
+		panUpButton.addActionListener(new MoveViewport(-2,0,0));
+		panDownButton.addActionListener(new MoveViewport(2,0,0));
 
 		
 		// Adds controls to parent board.
@@ -227,20 +215,21 @@ public class Simulation extends JFrame {
 		return buttonBoard;
 	}
 	
-	// Element used to select the current draw color. 
-	// Two color select mode is mostly for debugging.
-	// If it is replaced using extendible ruleset:
-	//	- Remove JToggleButton declaration.
-	//	- Rewrite JLabel label to use alt message.
-	//	- Use parameterless ColorSelector constructor.
-	//	- Remove extra board.add() calls.
+	/* Element used to select the current draw color. 
+	 * Two color select mode is mostly for debugging.
+	 * If it is replaced using extendible ruleset:
+	 *	- Remove JToggleButton declaration.
+	 *	- Rewrite JLabel label to use alt message.
+	 *	- Use parameterless ColorSelector constructor.
+	 *	- Remove extra board.add() calls.
+	*/
 	private JPanel buildColorSelector() {
 		JPanel board = new JPanel();
 		JLabel label = new JLabel("Drawing color: ");
 		
 		// Create dropdown panel to select color to draw with.
 		JComboBox<ColorState> colorList = new JComboBox<>(ColorState.getAllColorStates());
-		colorList.addActionListener(new ColorSelector(colorList));
+		colorList.addActionListener(new SelectDrawingColor(colorList));
 		// Add elements to parent board
 		board.add(label);
 		board.add(colorList);
@@ -248,12 +237,12 @@ public class Simulation extends JFrame {
 		return board;
 	}
 	
-	/* Simulation Controls Helpers */
+	/* SIMULATION CONTROLS HELPERS */
 	
 	// Advance to next frame.
 	public void step() {
 		currentStep++;
-		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
+		frameCounter.setText("Frame Counter: " + String.valueOf(currentStep));
 		
 		for(CellManager thread: threads) {
 			thread.calculateFrame();
@@ -265,7 +254,7 @@ public class Simulation extends JFrame {
 		currentStep = 0;
 		timer.stop();
 		timer.setDelay(1000);
-		fCounter.setText("Frame Counter: " + String.valueOf(currentStep));
+		frameCounter.setText("Frame Counter: " + String.valueOf(currentStep));
 		tickDelay = 10;
 		speedDisplay.setText("Ticks Per Second: " + (Float.toString((float)1000/timer.getDelay())));
 		Grid.setDrawingMode(true);
@@ -273,9 +262,9 @@ public class Simulation extends JFrame {
 	// Helper method to create a new grid.
 	private void generateMap(int size) {
 		// Clear board and regenerate.
-		gridBoard.removeAll();
+		gridPanel.removeAll();
 		// Grid.generate(gridBoard, rows, columns);
-		Grid.generate(gridBoard, size);
+		Grid.generate(gridPanel, size);
 		repaint();
 		setVisible(true);
 		
@@ -285,11 +274,12 @@ public class Simulation extends JFrame {
 		// Create new cellmanager(s)
 		threads = new CellManager[] { new CellManager() };
 	}
+	// Helper method to create new grid with random starting state.
 	private void generateMap(String seed, int size) {
 		// Clear board and regenerate.
-		gridBoard.removeAll();
+		gridPanel.removeAll();
 		// Grid.generate(gridBoard, rows, columns);
-		Grid.generateRandom(gridBoard, seed, size);
+		Grid.generateRandom(gridPanel, seed, size);
 		repaint();
 		setVisible(true);
 		
@@ -299,6 +289,7 @@ public class Simulation extends JFrame {
 		// Create new cellmanager(s)
 		threads = new CellManager[] { new CellManager() };
 	}
+
 	// Helper method to set and format speed display.
 	private void setSpeedDisplay() {
 		// Sets delay value
@@ -315,10 +306,10 @@ public class Simulation extends JFrame {
 		speedDisplay.setText(String.format("Ticks per Second: %.2f", 1000.0/timer.getDelay()));
 	}
 
-	/* Simulation Controls Action Listeners */
+
+	/* ACTION LISTENERS */
 	
-	// Parse user input for number of rows and columns.
-	// Then create new grid.
+	/* MAP GENERATION LISTENERS */
 	public class MapGenerate implements ActionListener {
 		JSpinner mapSizeField;
 		public MapGenerate(JSpinner mapSizeField) {
@@ -327,16 +318,8 @@ public class Simulation extends JFrame {
 
 		public void actionPerformed(ActionEvent e) {
 			// Get user input from text fields.
-			try {
-				// Parse input to int. 
-				int mapSize = (int)mapSizeField.getValue();
-
-				generateMap(mapSize);
-			}
-			catch(Exception s) {
-				JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
-						"ERROR", JOptionPane.ERROR_MESSAGE);
-			}
+			int mapSize = (int)mapSizeField.getValue();
+			generateMap(mapSize);
 			// Print to console for debugging.
 			System.out.println("MapGenerate");
         }
@@ -351,61 +334,41 @@ public class Simulation extends JFrame {
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			try {
-				// Parse input to int. 
-				int mapSize = (int)mapSizeField.getValue();
-				generateMap(seedField.getText(), mapSize); 
-			}
-			catch(Exception s) {
-				JOptionPane.showMessageDialog(null, "Invalid Input! Please Enter a positive number greater than 0!", 
-						"ERROR", JOptionPane.ERROR_MESSAGE);
-			}
+			int mapSize = (int)mapSizeField.getValue();
+			generateMap(seedField.getText(), mapSize); 
 			// Print to console for debugging.
 			System.out.println("Random MapGenerate");
 		}
 	}
-	// Starts the timer and modifies the speed display.
-	public class Play implements ActionListener {
+
+	/* SIMULATION CONTROLS */
+	public class StartTimer implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
+			// Initializes timer and speed display. 
 			setSpeedDisplay();
 			timer.start();
-			System.out.println("Play");
+
+			// Prevents user from overwriting initial state.
 			Grid.setDrawingMode(false);
+
+			// Print to debug log.
+			System.out.println("Play");
         }
 	}
-	// Stops the timer.
-	public class Pause implements ActionListener {
+	public class PauseTimer implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			timer.stop();
 			System.out.println("Pause");
         }
 	}
 	// Advance to next frame.
-	public class Step implements ActionListener {
+	public class StepTimer implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
-			System.out.println("Step");
 			step();
+			System.out.println("Step");
         }
 	}
-	// Resets the map to its initial state. 
-	// This preserves whatever the user has drawn.
-	public class Reset implements ActionListener {
-		public void actionPerformed(ActionEvent e) {	
-			clearGridBoard();
-			Grid.reset();
-			System.out.println("Reset");
-        }
-	}
-	// Clears the map such that all cells are dead
-	public class Clear implements ActionListener {
-		public void actionPerformed(ActionEvent e) {	
-			clearGridBoard();
-			Grid.clear();
-			System.out.println("Clear");
-        }
-	}
-	// Increases ticker speed
-	public class IncreaseSpeed implements ActionListener {
+	public class IncreaseTimerSpeed implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			tickDelay--;
 
@@ -418,8 +381,7 @@ public class Simulation extends JFrame {
 			System.out.println("Increase Speed");
         }
 	}
-	// Decreases ticker speed
-	public class DecreaseSpeed implements ActionListener {
+	public class DecreaseTimerSpeed implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			tickDelay++;
 
@@ -432,11 +394,26 @@ public class Simulation extends JFrame {
 			System.out.println("Decrease Speed");
         }
 	}
-
-	// Used to select which color to draw with.
-	public class ColorSelector implements ActionListener {
+	// Resets the map to its initial state. 
+	// This preserves whatever the user has drawn.
+	public class ResetGrid implements ActionListener {
+		public void actionPerformed(ActionEvent e) {	
+			clearGridBoard();
+			Grid.reset();
+			System.out.println("Reset");
+        }
+	}
+	// Clears the map to blank state.
+	public class ClearGrid implements ActionListener {
+		public void actionPerformed(ActionEvent e) {	
+			clearGridBoard();
+			Grid.clear();
+			System.out.println("Clear");
+        }
+	}
+	public class SelectDrawingColor implements ActionListener {
 		JComboBox<ColorState> colorSelector;
-		public ColorSelector(JComboBox<ColorState> selector) {
+		public SelectDrawingColor(JComboBox<ColorState> selector) {
 			colorSelector = selector;
 		}
 		
@@ -448,15 +425,12 @@ public class Simulation extends JFrame {
 			repaint();
 		}
 	}
-	
-	//checks text fields to zoom into the board
-	public class Zoom implements ActionListener 
-	{
+	public class MoveViewport implements ActionListener {
 		int xDelta;
 		int yDelta;
 		int zDelta;
 		
-		public Zoom(int horizontalMovement, int verticalMovement, int zoomChange)
+		public MoveViewport(int horizontalMovement, int verticalMovement, int zoomChange)
 		{
 			xDelta = horizontalMovement;
 			yDelta = verticalMovement;
@@ -466,7 +440,7 @@ public class Simulation extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			// Get user input from text fields.
 				
-			Grid.newZoom(gridBoard, xDelta, yDelta, zDelta);
+			Grid.newZoom(gridPanel, xDelta, yDelta, zDelta);
 			repaint();
 			setVisible(true);
 

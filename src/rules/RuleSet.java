@@ -1,4 +1,4 @@
-package data;
+package rules;
 /*UMGC CAPSTONE PROJECT
  * Title:Game of Life in Java By Team Fox Glove:
  *         Anthony Farias
@@ -16,8 +16,9 @@ package data;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 
-import rules.Rule;
+import data.ColorState;
 
 public class RuleSet {
 	private static ArrayList<Rule> ruleSet;
@@ -31,6 +32,7 @@ public class RuleSet {
 		return ruleSet;
 	}
 
+	// Convert ArrayList to regular array.
 	public static Rule[] asArray() {
 		Rule[] output = new Rule[ruleSet.size()];
 		return ruleSet.toArray(output);
@@ -61,8 +63,9 @@ public class RuleSet {
 	public static int size() {
 		return ruleSet.size();
 	}
+	// Get all color states mentioned in rules.
 	public static ColorState[] colorStatesUsedInRules() {
-		ArrayList<ColorState> states = new ArrayList<>();
+		HashSet<ColorState> states = new HashSet<>();
 
 		for(Rule rule: ruleSet) {
 			states.addAll(rule.getRelatedColorStates());

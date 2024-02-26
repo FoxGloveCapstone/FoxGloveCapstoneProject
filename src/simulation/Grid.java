@@ -18,7 +18,7 @@ package simulation;
 
 import data.ColorState;
 import data.Neighbors;
-import data.RuleSet;
+import rules.RuleSet;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -41,62 +41,60 @@ import javax.swing.SwingConstants;
 public class Grid {
 	private static Cell[][] cells;
 	// These are here temporarily, we can change it to a method or readonly
-	public static int width;
-	public static int height;
+	private static int size;
+	// Color to set cells that are clicked.
 	private static ColorState currentDrawingColor = ColorState.BLACK;
+	// Whether to overwrite cell's initial state. User can still draw on grid, 
+	// but their changes will not be saved by reset().
 	private static boolean isInDrawingMode = true;
 	
+	// Viewport camera controls.
 	private static int zoomFactor = 5;
-		
 	private static int centerX = 5;
-	
 	private static int centerY = 5;
+
+	// Used by the 3 different generate methods.
+	private static void init(JPanel gridPanel, int size) {
+		Grid.size = size;
+
+		centerX = size/2;
+		centerY = size/2;
+		zoomFactor = size;
+
+		cells = new Cell[size][size];
+		gridPanel.setLayout(new GridLayout(size, size));
+	}
 	
 	public static void generate(JPanel gridPanel, int size) {
-		Grid.width = size;
-		Grid.height = size;
+		init(gridPanel, size);
 
-		centerX = width/2;
-		centerY = height/2;
-		zoomFactor = height;
-
-		cells = new Cell[width][height];
-		gridPanel.setLayout(new GridLayout(width, height));
-
-        for (int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		// Create cells.
+        for (int x = 0; x < size; x++) {
+			for(int y = 0; y < size; y++) {
 				// String arguments passed here will label the buttons, 
 				// we probably don't want the buttons labeled.
 				JButton button = new JButton();
 				Cell cell = new Cell(button);
 				cells[x][y] = cell;
-				
-				// Sets the buttons size, its important to do this so that the buttons are square shaped
-				button.setPreferredSize(new Dimension(30, 30));
-				
+
 				// Adds the color manipulation to each cell so when you click it it changes color
-				button.addActionListener(new ColorSwitch(button, cell));
+				button.addActionListener(new ToggleCellColor(cell));
 				gridPanel.add(button);
 			}	
 		}
 	}
 
 	public static void generateRandom(JPanel gridPanel, String seed, int size) {
-		ColorState[] colors = RuleSet.colorStatesUsedInRules();			
+		// Init.
+		init(gridPanel, size);
 		Random rand = new Random(stringToLong(seed));
 
-		Grid.width = size;
-		Grid.height = size;
+		// Get colors that appear in the ruleset.
+		ColorState[] colors = RuleSet.colorStatesUsedInRules();			
 
-		centerX = width/2;
-		centerY = height/2;
-		zoomFactor = height;
-
-		cells = new Cell[width][height];
-		gridPanel.setLayout(new GridLayout(width, height));
-
-        for (int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		// Create cells.
+        for (int x = 0; x < size; x++) {
+			for(int y = 0; y < size; y++) {
 				// String arguments passed here will label the buttons, 
 				// we probably don't want the buttons labeled.
 				JButton button = new JButton();
@@ -106,21 +104,26 @@ public class Grid {
 				// Randomly set grid
 				cell.setColorState(colors[Math.abs(rand.nextInt()) % colors.length], true);
 				
-				// Sets the buttons size, its important to do this so that the buttons are square shaped
-				button.setPreferredSize(new Dimension(30, 30));
-				
 				// Adds the color manipulation to each cell so when you click it it changes color
-				button.addActionListener(new ColorSwitch(button, cell));
+				button.addActionListener(new ToggleCellColor(cell));
 				gridPanel.add(button);
 			}	
 		}
 	}
 	
+	// Helper method used to convert seed from a string into a long.
 	private static long stringToLong(String seed) {
+		/*
+		 * Long is 8 bytes. char is 1 byte.
+		 * - Iterate over chars in string.
+		 * - Add first char to first byte of long, second char to second byte, ...
+		 * - Cycle: ninth char added to first byte, ...
+		 */
 		long output = 0;
 
 		int index = 0;
 		for(char chara: seed.toCharArray()) {
+			// Shift char (index % 8) bytes to the left.
 			long num = chara << 8 * (index++ % 8);
 			output += num;
 		}
@@ -130,49 +133,42 @@ public class Grid {
 	}
 	//removes buttons and adds them back based on parameters
 	public static void newZoom(JPanel gridPanel, int xChange, int yChange, int zoomChange) {	
-		System.out.println("test Zoom");
-		
+		// Alter camera position.
 		zoomFactor += zoomChange;
-		
 		centerX += xChange;
-		
 		centerY += yChange;
 		
+		// Ensure center is in bounds.
 		if(centerX - (zoomFactor/2) < 0 || centerY - (zoomFactor/2) < 0)
 		{	
 			zoomFactor -= zoomChange;
-			
 			centerX -= xChange;
-			
 			centerY -= yChange;
-			
 			return;
 		}
-		if(centerX + (zoomFactor/2) > width || centerY + (zoomFactor/2) > height)
-		{	
+		if(centerX + (zoomFactor/2) > size || centerY + (zoomFactor/2) > size) {	
 			zoomFactor -= zoomChange;
-			
 			centerX -= xChange;
-			
 			centerY -= yChange;
-			
 			return;
 		}
 		
+		// Reset grid gui.
 		gridPanel.removeAll();
-		
 		gridPanel.setLayout(new GridLayout(zoomFactor, zoomFactor));
-		
-		for (int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
-				
-				if(x >= (centerX - (zoomFactor/2)) && x < (centerX + (zoomFactor/2)) && y >= (centerY - (zoomFactor/2)) && y < (centerY + (zoomFactor/2)) )
-				{
-					System.out.println("added" + x + y);
 
-				
-				// Adds the color manipulation to each cell so when you click it it changes color
-				gridPanel.add(cells[x][y].getButton());
+		// Viewport boundary.
+		int rightBound = centerX + (zoomFactor/2);
+		int leftBound = centerX - (zoomFactor/2);
+		int topBound = centerY + (zoomFactor/2);
+		int lowBound = centerY - (zoomFactor/2);
+		
+		for (int x = 0; x < size; x++) {
+			for(int y = 0; y < size; y++) {
+				// Ensure cell is within bounds.
+				if(x >= leftBound && x < rightBound && y >= lowBound && y < topBound) {
+					// If cell is in bounds, readd its button to the gui.
+					gridPanel.add(cells[x][y].getButton());
 				}
 			}	
 		}
@@ -181,22 +177,21 @@ public class Grid {
 	// If user manually set state of cell, return to that state
 	// Else return to starting state
 	public static void reset() {
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		for(int x = 0; x < size; x++) {
+			for(int y = 0; y < size; y++) {
 				cells[x][y].resetColorState();
 			}
 		}
 	}
 	// Return cells to starting state
 	public static void clear() {
-		for(int x = 0; x < width; x++) {
-			for(int y = 0; y < height; y++) {
+		for(int x = 0; x < size; x++) {
+			for(int y = 0; y < size; y++) {
 				cells[x][y].clearColorState();
 			}
 		}
 	}
 	
-	// Set drawing color
 	public static void setDrawingColor(ColorState col) {
 		currentDrawingColor = col;
 	}
@@ -204,9 +199,12 @@ public class Grid {
 		isInDrawingMode = drawMode;
 	}
 	
+	// Collect the cells that neighbor Cell(x,y), ensuring not to go out of bounds.
+	// Tally up colorstates of each cell.
 	public static Neighbors getNeighborsOf(int x, int y) {
 		Neighbors n = new Neighbors();
 		Cell cell;
+
 		// Get top-left neighbor 
 		if(x - 1 > -1 && y - 1 > -1) {
 			cell = Grid.getCellAt(x - 1, y - 1);
@@ -218,7 +216,7 @@ public class Grid {
 			n.add(cell.getColorState());
 		}
 		// Get top-right neighbor
-		if(x + 1 < width && y - 1 > -1) {
+		if(x + 1 < size && y - 1 > -1) {
 			cell = Grid.getCellAt(x + 1, y - 1);
 			n.add(cell.getColorState());
 		}
@@ -228,26 +226,25 @@ public class Grid {
 			n.add(cell.getColorState());
 		}
 		// Get right neighbor
-		if(x + 1 < width) {
+		if(x + 1 < size) {
 			cell = Grid.getCellAt(x + 1, y);
 			n.add(cell.getColorState());
 		}
 		// Get bottom-left neighbor
-		if(x - 1 > -1 && y + 1 < height) {
+		if(x - 1 > -1 && y + 1 < size) {
 			cell = Grid.getCellAt(x - 1, y + 1);
 			n.add(cell.getColorState());
 		}
 		// Get bottom neighbor
-		if(y + 1 < height) {
+		if(y + 1 < size) {
 			cell = Grid.getCellAt(x, y + 1);
 			n.add(cell.getColorState());
 		}
 		// Get bottom-right neighbor
-		if(x + 1 < width && y + 1 < height) {
+		if(x + 1 < size && y + 1 < size) {
 			cell = Grid.getCellAt(x + 1, y + 1);
 			n.add(cell.getColorState());
 		}
-
 
 		return n;
 	}
@@ -256,22 +253,19 @@ public class Grid {
 		// Caller must guarantee indices are in bounds.
 		return cells[x][y];
 	}
+	public static int getSize() {
+		return size;
+	}
 	
-	public static class ColorSwitch implements ActionListener {
-		// This variable might not be necessary anymore, but I'll keep it here for now, just in case.
-		public JButton button;
+	public static class ToggleCellColor implements ActionListener {
 		public Cell cell;
 		
-		public ColorSwitch(JButton butt, Cell cell) {
-			this.button = butt;
+		public ToggleCellColor(Cell cell) {
 			this.cell = cell;
 		}
 
 		public void actionPerformed(ActionEvent e) {
-			// If/when extendible rulesets are implemented, this will be the only necessary line.
-			//cell.setColorState(currentDrawingColor);
-			
-			// Otherwise, use normal toggle mode
+			// Toggle cell color.
             if (cell.getColorState() == Grid.currentDrawingColor) 
                 cell.setColorState(ColorState.WHITE, Grid.isInDrawingMode);
             else 
