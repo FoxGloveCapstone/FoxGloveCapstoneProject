@@ -280,6 +280,7 @@ public class Simulation extends JFrame {
 		gridBoard.removeAll();
 		// Grid.generate(gridBoard, rows, columns);
 		Grid.generate(gridBoard, rows, columns);
+		repaint();
 		setVisible(true);
 		
 		// Reset simulation parameters.
