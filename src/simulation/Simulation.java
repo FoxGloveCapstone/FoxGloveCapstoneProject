@@ -62,7 +62,6 @@ public class Simulation extends JFrame {
 	private JLabel frameCounter = new JLabel("Frame Counter: ");
 	private JLabel speedDisplay = new JLabel("Ticks Per Second: 1");
 	private JPanel gridPanel = new JPanel(new GridLayout(DEFAULT_GRID_SIZE, DEFAULT_GRID_SIZE));
-	private RulesListGUI rulesPanel;
 	
 	public static void main(String[] args) {
         Simulation window = new Simulation();
@@ -94,7 +93,7 @@ public class Simulation extends JFrame {
 		JSplitPane controlBoard = new JSplitPane(
 				SwingConstants.HORIZONTAL, 
 				new RulesListGUI(this, RuleSet.asArray()),
-				buildButtonBoard());
+				buildButtonPanel());
 
 		//Sets Dimensions on side grid and divider location on the splitpane
 		controlBoard.setDividerLocation(350);
@@ -110,109 +109,118 @@ public class Simulation extends JFrame {
 	}
 	
 	// Create buttons that control simulation.
-	private JPanel buildButtonBoard() {
-		JPanel buttonBoard = new JPanel();
-		buttonBoard.setLayout(new BoxLayout(buttonBoard, BoxLayout.PAGE_AXIS));
+	private JPanel buildButtonPanel() {
+		JPanel buttonPanel = new JPanel();
+		buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.PAGE_AXIS));
 
-		// Subpanels which hold 
-		JPanel mapControls = new JPanel();
-		JPanel simControls = new JPanel();
-		JPanel speedControls = new JPanel();
-		JPanel drawControls = new JPanel();
-		JPanel navControls = new JPanel();
+		/* CREATE SUBPANELS */
+		// MapGen controls panel.
+		JPanel mapGenPanel = new JPanel();
+		buttonPanel.add(mapGenPanel);
 
-		// Wrapper panel for frame counter
-		JPanel fCounterDisplay = new JPanel();
-		fCounterDisplay.add(frameCounter);
-		
-		// Add subpanels to main board
-		buttonBoard.add(mapControls);
-		buttonBoard.add(simControls);
-		buttonBoard.add(navControls);
-		buttonBoard.add(speedControls);
-		buttonBoard.add(fCounterDisplay);
-		buttonBoard.add(drawControls);
-
-		// Elements for sim controls
-		JLabel rowsLabel = new JLabel ("Map Size");
+		// MAP GENERATION CONTROLS.
+		// Get map size from user.
+		JLabel mapSizeLabel = new JLabel ("Map Size");
 		JSpinner mapSizeField = new JSpinner(
 				new SpinnerNumberModel(DEFAULT_GRID_SIZE, MIN_GRID_SIZE, MAX_GRID_SIZE, 1));
 
-		
+		// Get seed for randomly generating map from user.
+		JTextField mapSeedField = new JTextField("Seed");
+		mapSeedField.setColumns(30);
+
+		// Add buttons to generate map.
 		JButton mapGenerateButton = new JButton("Generate Map");
-		JButton randMapGenerateButton = new JButton("Generate Random Map");
-		JTextField seedField = new JTextField("Seed");
-		seedField.setColumns(30);
-
-		JButton playButton = new JButton("Start");
-		JButton pauseButton = new JButton("Pause");
-		JButton nextButton = new JButton("Next");
-		JButton clearButton = new JButton("Clear");
-		JButton resetButton = new JButton("Reset");
-		JButton slowButton = new JButton("<-");
-		JButton speedButton = new JButton("->");
-		
-		JButton zoomButton = new JButton("testZoom");
-		
-		JButton zoomInButton = new JButton("Zoom In");
-		JButton zoomOutButton = new JButton("Zoom Out");
-		JButton panLeftButton = new JButton("Pan Left");
-		JButton panRightButton = new JButton("Pan Right");
-		JButton panUpButton = new JButton("Pan Up");
-		JButton panDownButton = new JButton("Pan Down");
-
-		
-		// Attach actionlisteners to sim controls
 		mapGenerateButton.addActionListener(new MapGenerate(mapSizeField));
-		randMapGenerateButton.addActionListener(new RandomMapGenerate(seedField, mapSizeField));
-		playButton.addActionListener(new StartTimer());
-		pauseButton.addActionListener(new PauseTimer());
-		nextButton.addActionListener(new StepTimer());
-		slowButton.addActionListener(new DecreaseTimerSpeed());
-		speedButton.addActionListener(new IncreaseTimerSpeed());
-		clearButton.addActionListener(new ClearGrid()); 
-		resetButton.addActionListener(new ResetGrid());
-		//zoomButton.addActionListener(new Zoom());
-		
-		zoomInButton.addActionListener(new MoveViewport(0,0,-2));
-		zoomOutButton.addActionListener(new MoveViewport(0,0,2));
-		panLeftButton.addActionListener(new MoveViewport(0,-2,0));
-		panRightButton.addActionListener(new MoveViewport(0,2,0));
-		panUpButton.addActionListener(new MoveViewport(-2,0,0));
-		panDownButton.addActionListener(new MoveViewport(2,0,0));
-
-		
-		// Adds controls to parent board.
-		simControls.add(playButton);
-		simControls.add(pauseButton);
-		simControls.add(nextButton);
-		simControls.add(clearButton);
-		simControls.add(resetButton);
+		JButton randMapGenerateButton = new JButton("Generate Random Map");
+		randMapGenerateButton.addActionListener(new RandomMapGenerate(mapSeedField, mapSizeField));
 
 		// Add map controls to parent.
-		mapControls.add(rowsLabel);
-		mapControls.add(mapSizeField);
-		mapControls.add(mapGenerateButton);
-		mapControls.add(seedField);
-		mapControls.add(randMapGenerateButton);
+		mapGenPanel.add(mapSizeLabel);
+		mapGenPanel.add(mapSizeField);
+		mapGenPanel.add(mapGenerateButton);
+		mapGenPanel.add(mapSeedField);
+		mapGenPanel.add(randMapGenerateButton);
 		
-		// Add speed controls to parent board.
-		speedControls.add(slowButton);
-		speedControls.add(speedDisplay);
-		speedControls.add(speedButton);
+
+		// SIM CONTROLS
+		JPanel simControlsPanel = new JPanel();
+		buttonPanel.add(simControlsPanel);
+
+		// Add buttons to control simulation.
+		JButton playButton = new JButton("Start");
+		playButton.addActionListener(new StartTimer());
+		JButton pauseButton = new JButton("Pause");
+		pauseButton.addActionListener(new PauseTimer());
+		JButton nextButton = new JButton("Next");
+		nextButton.addActionListener(new StepTimer());
+		JButton clearButton = new JButton("Clear");
+		clearButton.addActionListener(new ClearGrid()); 
+		JButton resetButton = new JButton("Reset");
+		resetButton.addActionListener(new ResetGrid());
+
+		// Adds controls to parent board.
+		simControlsPanel.add(playButton);
+		simControlsPanel.add(pauseButton);
+		simControlsPanel.add(nextButton);
+		simControlsPanel.add(clearButton);
+		simControlsPanel.add(resetButton);
+
+		// NAV CONTROLS
+		JPanel navControls = new JPanel();
+		buttonPanel.add(navControls);
+
+		// Controls for moving the viewport/navigating the grid.
+		JButton zoomInButton = new JButton("Zoom In");
+		zoomInButton.addActionListener(new MoveViewport(0,0,-2));
+		JButton zoomOutButton = new JButton("Zoom Out");
+		zoomOutButton.addActionListener(new MoveViewport(0,0,2));
+		JButton panLeftButton = new JButton("Pan Left");
+		panLeftButton.addActionListener(new MoveViewport(0,-2,0));
+		JButton panRightButton = new JButton("Pan Right");
+		panRightButton.addActionListener(new MoveViewport(0,2,0));
+		JButton panUpButton = new JButton("Pan Up");
+		panUpButton.addActionListener(new MoveViewport(-2,0,0));
+		JButton panDownButton = new JButton("Pan Down");
+		panDownButton.addActionListener(new MoveViewport(2,0,0));
 		
-		//Navigation (zoom) controls		
+		// Add navigation/viewport controls to parent.
 		navControls.add(panLeftButton);
 		navControls.add(panRightButton);
 		navControls.add(panUpButton);
 		navControls.add(panDownButton);
 		navControls.add(zoomInButton);
 		navControls.add(zoomOutButton);
-		
-		// Add rule selection elements to board 
+
+		// SPEED CONTROLS
+		JPanel speedControls = new JPanel();
+		buttonPanel.add(speedControls);
+
+		// Create buttons to increase and decrease sim speed.
+		JButton slowButton = new JButton("<-");
+		slowButton.addActionListener(new DecreaseTimerSpeed());
+		JButton speedButton = new JButton("->");
+		speedButton.addActionListener(new IncreaseTimerSpeed());
+
+		// Add speed controls to parent board.
+		speedControls.add(slowButton);
+		speedControls.add(speedDisplay);
+		speedControls.add(speedButton);
+
+		// FRAME COUNTER DISPLAY 
+		// Add frame counter to board.
+		JPanel fCounterDisplay = new JPanel();
+		fCounterDisplay.add(frameCounter);
+		buttonPanel.add(fCounterDisplay);
+
+		// DRAW CONTROLS
+		JPanel drawControls = new JPanel();
+		buttonPanel.add(drawControls);
+
+		// Add color selector to board.
 		JPanel colorSelector = buildColorSelector();
 		drawControls.add(colorSelector);
-		return buttonBoard;
+
+		return buttonPanel;
 	}
 	
 	/* Element used to select the current draw color. 
