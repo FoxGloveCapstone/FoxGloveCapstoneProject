@@ -18,36 +18,30 @@ package simulation;
  */
 
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.JSplitPane;
 import javax.swing.JTextField;
-import javax.swing.JToggleButton;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.Timer;
 
 import data.ColorState;
-import gui.RuleGUI;
 import gui.RulesListGUI;
 import rules.Rule;
 import rules.RuleSet;
 
+@SuppressWarnings("serial")
 public class Simulation extends JFrame {
 	private final int DEFAULT_GRID_SIZE = 20;
 	private final int MIN_GRID_SIZE = 10;
@@ -141,7 +135,6 @@ public class Simulation extends JFrame {
 		mapGenPanel.add(mapSeedField);
 		mapGenPanel.add(randMapGenerateButton);
 		
-
 		// SIM CONTROLS
 		JPanel simControlsPanel = new JPanel();
 		buttonPanel.add(simControlsPanel);
@@ -252,6 +245,7 @@ public class Simulation extends JFrame {
 		currentStep++;
 		frameCounter.setText("Frame Counter: " + String.valueOf(currentStep));
 		
+		// For multithreading, this would be broken into two loops.
 		for(CellManager thread: threads) {
 			thread.calculateFrame();
 			thread.updateGUI();
@@ -303,12 +297,10 @@ public class Simulation extends JFrame {
 		// Sets delay value
 		if(tickDelay <= 10) {
 			timer.setDelay(tickDelay * 100);
-			System.out.println(timer.getDelay());
 		}
 
 		else {
 			timer.setDelay((tickDelay - 9) * 1000);
-			System.out.println(timer.getDelay());
 		}
 
 		speedDisplay.setText(String.format("Ticks per Second: %.2f", 1000.0/timer.getDelay()));
@@ -329,7 +321,7 @@ public class Simulation extends JFrame {
 			int mapSize = (int)mapSizeField.getValue();
 			generateMap(mapSize);
 			// Print to console for debugging.
-			System.out.println("MapGenerate");
+			System.out.println("Map Generate");
         }
 	}
 	public class RandomMapGenerate implements ActionListener {
@@ -345,7 +337,7 @@ public class Simulation extends JFrame {
 			int mapSize = (int)mapSizeField.getValue();
 			generateMap(seedField.getText(), mapSize); 
 			// Print to console for debugging.
-			System.out.println("Random MapGenerate");
+			System.out.println("Random Map Generate");
 		}
 	}
 
@@ -380,26 +372,26 @@ public class Simulation extends JFrame {
 		public void actionPerformed(ActionEvent e) {
 			tickDelay--;
 
-			//prevents speeds above 10 ticks per second
+			// Prevents speeds above 10 ticks per second
 			if(tickDelay < 1) {
 				tickDelay = 1;
 			}
 
 			setSpeedDisplay();
-			System.out.println("Increase Speed");
+			System.out.println("Increase Speed: " + timer.getDelay());
         }
 	}
 	public class DecreaseTimerSpeed implements ActionListener {
 		public void actionPerformed(ActionEvent e) {
 			tickDelay++;
 
-			//prevents negative speed
+			// Prevents negative speed
 			if(tickDelay > 19) {
 				tickDelay = 19;
 			}
 
 			setSpeedDisplay();
-			System.out.println("Decrease Speed");
+			System.out.println("Decrease Speed: " + timer.getDelay());
         }
 	}
 	// Resets the map to its initial state. 
@@ -421,6 +413,7 @@ public class Simulation extends JFrame {
 	}
 	public class SelectDrawingColor implements ActionListener {
 		JComboBox<ColorState> colorSelector;
+
 		public SelectDrawingColor(JComboBox<ColorState> selector) {
 			colorSelector = selector;
 		}
@@ -446,14 +439,12 @@ public class Simulation extends JFrame {
 		}
 		
 		public void actionPerformed(ActionEvent e) {
-			// Get user input from text fields.
-				
 			Grid.newZoom(gridPanel, xDelta, yDelta, zDelta);
 			repaint();
 			setVisible(true);
 
 			// Print to console for debugging.
-			System.out.println("zoooom");
+			System.out.println("Moved Viewport");
 		}
 	}
 }

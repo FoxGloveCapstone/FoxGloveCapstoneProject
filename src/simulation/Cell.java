@@ -15,13 +15,13 @@ package simulation;
 *The Cell class: it Controls the state of a specific cell.
 */
 
-import rules.*;
-import data.*;
+import rules.Rule;
+import rules.RuleSet;
+import data.ColorState;
+import data.Neighbors;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import javax.swing.JButton;
 

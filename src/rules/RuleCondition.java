@@ -16,7 +16,9 @@ package rules;
  * If this statement is evaluated to be true, this condition is met.
  */
 
-import data.*;
+import data.RelOp;
+import data.Neighbors;
+import data.ColorState;
 
 public abstract class RuleCondition {
 	public abstract boolean check(Neighbors neighbors, ColorState currentColorState);

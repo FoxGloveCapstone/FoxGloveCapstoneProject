@@ -85,11 +85,11 @@ public enum ColorState {
 				return ColorState.MAGENTA;
 			case "PINK":
 				return ColorState.PINK;
-			case "DARKGRAY":
+			case "DARK_GRAY":
 				return ColorState.DARK_GRAY;
 			case "GRAY":
 				return ColorState.GRAY;
-			case "LIGHTGRAY":
+			case "LIGHT_GRAY":
 				return ColorState.LIGHT_GRAY;
 			case "CYAN":
 				return ColorState.CYAN;

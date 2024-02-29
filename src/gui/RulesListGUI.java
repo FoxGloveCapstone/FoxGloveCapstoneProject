@@ -15,8 +15,6 @@ package gui;
  * Allows the user to move, add, and remove rules.
  */
 
-import java.awt.GridLayout;
-import java.awt.ScrollPane;
 import java.awt.Toolkit;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
@@ -24,23 +22,19 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-import javax.swing.Action;
 import javax.swing.BoxLayout;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
-import gui.RulesListGUI.GenerateRules;
-import gui.RulesListGUI.PrintRules;
 import rules.Rule;
 import rules.RuleSet;
-import simulation.Cell;
 
+@SuppressWarnings("serial")
 public class RulesListGUI extends JPanel {
 	private JScrollPane scrollPane;
 	private JPanel rulesList;
@@ -275,7 +269,6 @@ public class RulesListGUI extends JPanel {
 			String rulesString = rulesField.getText();
 						
 			String[] tokens = rulesString.split("EndRule");
-			
 			Rule[] newRules = new Rule[tokens.length];
 						
 			int i = 0;

@@ -15,22 +15,18 @@ package gui;
  * Used to display a specific rule in the rules list.
  */
 
-import java.awt.GridLayout;
-import java.awt.event.ActionListener;
-
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 
-import data.*;
+import data.ColorState;
+import data.RelOp;
 import rules.CurrentStateCondition;
 import rules.NeighborStateCondition;
 import rules.Rule;
 import rules.RuleCondition;
 
-
+@SuppressWarnings("serial")
 public class RuleGUI extends JPanel {
 	private JRadioButton selectButton;
 

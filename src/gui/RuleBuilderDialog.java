@@ -15,12 +15,21 @@ package gui;
  * Gets input from user in order to create a new rule.
  */
 
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSpinner;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.SpinnerNumberModel;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JDialog;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import data.ColorState;
 import data.RelOp;
@@ -29,21 +38,7 @@ import rules.NeighborStateCondition;
 import rules.Rule;
 import rules.RuleCondition;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JDialog;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-
-import java.awt.Component;
-import java.awt.GridLayout;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.WindowEvent;
-import java.util.ArrayList;
-
-
+@SuppressWarnings("serial")
 public class RuleBuilderDialog extends JDialog {
 	private JScrollPane scrollPane;
 	private JPanel conditionList; 

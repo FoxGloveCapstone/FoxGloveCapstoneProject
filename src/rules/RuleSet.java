@@ -2,10 +2,10 @@ package rules;
 /*UMGC CAPSTONE PROJECT
  * Title:Game of Life in Java By Team Fox Glove:
  *         Anthony Farias
-           Mitchell Howard
-           Patrick Kamdem
-           Hyrum Madson
-           Bensaiten Sanchez Flores 
+ *         Mitchell Howard
+ *         Patrick Kamdem
+ *         Hyrum Madson
+ *         Bensaiten Sanchez Flores 
  * 
  *CMSC 495 7380
  *Professor Sanford

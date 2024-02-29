@@ -20,23 +20,13 @@ import data.ColorState;
 import data.Neighbors;
 import rules.RuleSet;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Random;
 
 import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JSplitPane;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
 
 public class Grid {
 	private static Cell[][] cells;
@@ -131,7 +121,7 @@ public class Grid {
 		System.out.println("Long seed: " + output);
 		return output;
 	}
-	//removes buttons and adds them back based on parameters
+	// Removes buttons and adds them back based on parameters.
 	public static void newZoom(JPanel gridPanel, int xChange, int yChange, int zoomChange) {	
 		// Alter camera position.
 		zoomFactor += zoomChange;
@@ -167,7 +157,7 @@ public class Grid {
 			for(int y = 0; y < size; y++) {
 				// Ensure cell is within bounds.
 				if(x >= leftBound && x < rightBound && y >= lowBound && y < topBound) {
-					// If cell is in bounds, readd its button to the gui.
+					// If cell is in bounds, read its button to the gui.
 					gridPanel.add(cells[x][y].getButton());
 				}
 			}	

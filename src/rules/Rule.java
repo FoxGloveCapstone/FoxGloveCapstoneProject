@@ -1,8 +1,5 @@
 package rules;
 
-import java.util.EnumSet;
-import java.util.HashSet;
-
 /*UMGC CAPSTONE PROJECT
 * Title:Game of Life in Java By Team Fox Glove:
 *         Anthony Farias
@@ -19,7 +16,11 @@ import java.util.HashSet;
  * (how many of its neighbors are alive/dead, its current state, etc).
  */
 
-import data.*;
+import java.util.HashSet;
+
+import data.ColorState;
+import data.RelOp;
+import data.Neighbors;
 
 public class Rule {
 	// If all of these resolve to true
