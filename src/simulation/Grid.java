@@ -124,6 +124,28 @@ public class Grid {
 	// Removes buttons and adds them back based on parameters.
 	public static void newZoom(JPanel gridPanel, int xChange, int yChange, int zoomChange) {	
 		// Alter camera position.
+		//scales zoom and pain with viewport size
+		if(zoomFactor > 25)
+		{
+			zoomChange *= 3;
+			xChange *= 2;
+			yChange *= 2;
+		}
+		
+		if(zoomFactor > 50)
+		{
+			zoomChange *= 3;
+			xChange *= 2;
+			yChange *= 2;
+		}
+		
+		if(zoomFactor > 100)
+		{
+			zoomChange *= 3;
+			xChange *= 2;
+			yChange *= 2;
+		}
+		
 		zoomFactor += zoomChange;
 		centerX += xChange;
 		centerY += yChange;
