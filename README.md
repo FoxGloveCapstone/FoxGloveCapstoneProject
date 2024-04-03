@@ -7,6 +7,7 @@ Fig 1: The User interface
 
 
 <br>
+
 ![UI for generating a new grid/map](resources/2.png)
 Fig 2: The controls for generating a new grid/map.
 
@@ -18,6 +19,7 @@ Fig 2: The controls for generating a new grid/map.
 
 
 <br>
+
 ![UI for controlling the simulation](resources/3.png)
 Fig 3: The buttons for controlling the simulation.
 
@@ -33,6 +35,7 @@ Fig 3: The buttons for controlling the simulation.
 
 
 <br>
+
 ![UI for controlling camera and sim speed](resources/4.png)
 Fig 4: The buttons for controlling the camera, simulation speed, and a display showing the current frame number.
 
@@ -49,6 +52,7 @@ Fig 4: The buttons for controlling the camera, simulation speed, and a display s
 The program allows for the user to define their own rules and offers a variety of colors to select from while doing so.
 
 <br>
+
 ![UI displaying simulation rules](resources/5-1.png)
 Fig 5.1: The ruleset governing how the simulation is running and the controls for modifying it.
 
@@ -57,6 +61,7 @@ A rule is composed of 1 or more conditions, which are simple boolean (true or fa
 
 
 <br>
+
 ![Closeup of rule](resources/5-2.png)
 Fig 5.2: Rule 3 from the default set of rules. It is two conditions are met the cell turns black in the next frame.
 
@@ -64,6 +69,7 @@ A rule can be selected using the radio button on its left (as seen in figures 5.
 
 
 <br>
+
 ![UI for modifying the ruleset](resources/5-3.png)
 Fig 5.3: The buttons used to modify the ruleset.
 
@@ -74,6 +80,7 @@ Fig 5.3: The buttons used to modify the ruleset.
 
 
 <br>
+
 ![Rule Creation Dialog](resources/5-4.png)
 Fig 5.4: The rule creation dialog window.
 
@@ -95,6 +102,7 @@ Below the “Add Condition” box in figure 5.4 is where you set the result of t
 
 
 <br>
+
 ![UI for controlling drawing color](resources/5-5.png)
 Fig 5.5: The dropdown menu where the user can select their drawing color. 
 
@@ -103,6 +111,7 @@ Clicking on a blank cell in the grid will set that cell’s state to match the c
 NOTE: the behavior of the cells is determined by the rules. If you set a cell to a color that is not mentioned in the rules, it will most likely disappear in the next frame or otherwise behave in an unexpected manner. For example, if you are using the default ruleset and make a cell red, this cell will turn white or black in the next frame, depending on its neighbors. 
 
 <br>
+
 ![UI for saving and loading rulesets](resources/6.png)
 Fig 6: The controls for saving and loading rulesets.
 
