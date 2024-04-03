@@ -6,6 +6,7 @@ This is the Capstone project created by Team Foxglove, in the UMGC graduating cl
 Fig 1: The User interface
 
 
+<br>
 ![UI for generating a new grid/map](resources/2.png)
 Fig 2: The controls for generating a new grid/map.
 
@@ -16,6 +17,7 @@ Fig 2: The controls for generating a new grid/map.
 2.3) Clicking the “Generate Random Map” button creates a new randomized grid using the seed value provided in the text field labelled “seed” in figure 2.
 
 
+<br>
 ![UI for controlling the simulation](resources/3.png)
 Fig 3: The buttons for controlling the simulation.
 
@@ -30,6 +32,7 @@ Fig 3: The buttons for controlling the simulation.
 3.5) The reset button resets the grid to the original user placed configuration.
 
 
+<br>
 ![UI for controlling camera and sim speed](resources/4.png)
 Fig 4: The buttons for controlling the camera, simulation speed, and a display showing the current frame number.
 
@@ -45,6 +48,7 @@ Fig 4: The buttons for controlling the camera, simulation speed, and a display s
 ## Advanced Controls
 The program allows for the user to define their own rules and offers a variety of colors to select from while doing so.
 
+<br>
 ![UI displaying simulation rules](resources/5-1.png)
 Fig 5.1: The ruleset governing how the simulation is running and the controls for modifying it.
 
@@ -52,12 +56,14 @@ Every frame, each cell tests their environment against the list of rules shown i
 A rule is composed of 1 or more conditions, which are simple boolean (true or false) statements about the cell’s environment. The environment consists of the cell’s current state and the states of its 8 neighbors. A rule also has a result: the state a cell becomes after meeting all its conditions. 
 
 
+<br>
 ![Closeup of rule](resources/5-2.png)
 Fig 5.2: Rule 3 from the default set of rules. It is two conditions are met the cell turns black in the next frame.
 
 A rule can be selected using the radio button on its left (as seen in figures 5.1 and 5.2). The selected rule can then be modified using the buttons shown in figure 5.3 (with the exceptions of the “New Rule” and “Revert to Default Ruleset” buttons, which operate on the entire list). 
 
 
+<br>
 ![UI for modifying the ruleset](resources/5-3.png)
 Fig 5.3: The buttons used to modify the ruleset.
 
@@ -67,6 +73,7 @@ Fig 5.3: The buttons used to modify the ruleset.
 • The “Revert to Default Ruleset” button resets the list to the original 4.
 
 
+<br>
 ![Rule Creation Dialog](resources/5-4.png)
 Fig 5.4: The rule creation dialog window.
 
@@ -75,7 +82,8 @@ There are 2 types of conditions a rule can use, and every rule can have as many 
 The first type of condition analyzes the neighbors around the cell (the first and second conditions shown in figure 5.4). It has 3 parts which are selected using the three dropdown menus. These parts are \<color>, \<relationship>, and \<quantity>, where:
     • \<color>: one of the colors this cell’s neighbors can be in.
     • \<quantity>: A number between 0 and 8, referring to the number of neighbors with/without this color state.
-    • \<relationship>: equal (==), not equal (!=), greater than (>), greater than or equal (>=), less than (\<), or less than or equal (\<=). This is how the number of neighbors must relate to the \<quantity>.
+    • \<relationship>: equal (==), not equal (<br>
+!=), greater than (>), greater than or equal (>=), less than (\<), or less than or equal (\<=). This is how the number of neighbors must relate to the \<quantity>.
 
 For example, in the first condition in figure 5.4 <color = black>, <relationship = ‘==’>, and <quantity = 1>. In plain English, this means that a cell must have 1 neighbor which is currently black (no more, no less). Similarly, the second condition means that the cell must have less than 8 red neighbors. 
 
@@ -86,6 +94,7 @@ The third and fourth conditions in figure 5.4 are examples of this condition typ
 Below the “Add Condition” box in figure 5.4 is where you set the result of the rule. This is the color the cell will take in the next frame if it satisfies the conditions defined by this rule. So, for the example rule from above, a green cell with 1 black and 7 red neighbors will turn orange in the next frame. 
 
 
+<br>
 ![UI for controlling drawing color](resources/5-5.png)
 Fig 5.5: The dropdown menu where the user can select their drawing color. 
 
@@ -93,6 +102,7 @@ Clicking on a blank cell in the grid will set that cell’s state to match the c
 
 NOTE: the behavior of the cells is determined by the rules. If you set a cell to a color that is not mentioned in the rules, it will most likely disappear in the next frame or otherwise behave in an unexpected manner. For example, if you are using the default ruleset and make a cell red, this cell will turn white or black in the next frame, depending on its neighbors. 
 
+<br>
 ![UI for saving and loading rulesets](resources/6.png)
 Fig 6: The controls for saving and loading rulesets.
 
